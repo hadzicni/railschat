@@ -90,7 +90,7 @@ en:
     no_messages_room: "No messages in this chat room yet"
     start_conversation: "Be the first to start the conversation!"
 
-  # Admin
+    # Admin
   admin:
     dashboard: "Dashboard"
     welcome_admin: "Welcome to the administration area"
@@ -110,11 +110,11 @@ en:
     latest_messages: "Latest Messages"
     no_messages_written: "No messages written yet"
     show_all_messages_from: "Show all messages from %{user}"
-    admin_actions: "Administrator Actions"
-    change_admin_status: "Change Admin Status"
+    admin_actions: "Admin Actions"
+    change_admin_status: "Change admin status"
     grant_or_revoke_admin: "Grant or revoke administrator rights"
-    ban_unban_user: "Ban/Unban User"
-    ban_or_unban_desc: "Block or allow login"
+    ban_unban_user: "Ban/unban user"
+    ban_or_unban_desc: "Prevent or allow login"
     dangerous_actions: "Dangerous Actions"
     irreversible_actions: "These actions cannot be undone"
     delete_user: "Delete User"
@@ -128,6 +128,21 @@ en:
     confirm_unban: "Unban user?"
     confirm_delete: "Really delete user? This cannot be undone!"
     banned_message: "Your account has been banned. Please contact the administrator."
+    create_user: "Create User"
+    new_user_form: "Create New User"
+    prevented_saving: "prevented saving"
+    first_name_placeholder: "Enter first name..."
+    last_name_placeholder: "Enter last name..."
+    first_name_required: "First name is required"
+    last_name_required: "Last name is required"
+    email_required: "Email address is required"
+    generated_password: "Generated Password"
+    copy: "Copy"
+    copied: "Copied!"
+    password_info: "This password was automatically generated. The user should change it on first login."
+    bio_placeholder: "Brief description about the user..."
+    location_placeholder: "City, Country"
+    cancel: "Cancel"
 
   # User Status
   status:

@@ -5,6 +5,10 @@
       <p class="text-muted">Verwalte alle registrierten Benutzer</p>
     </div>
     <div>
+      <%= link_to new_admin_user_path, class: "btn btn-success me-2" do %>
+        <i class="bi bi-person-plus me-1"></i>
+        <%= t('admin.create_user') %>
+      <% end %>
       <%= link_to "Dashboard", admin_dashboard_index_path, class: "btn btn-outline-secondary me-2" %>
       <%= link_to "Zurück zur App", root_path, class: "btn btn-outline-primary" %>
     </div>

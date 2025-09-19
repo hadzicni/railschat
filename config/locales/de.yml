@@ -97,6 +97,21 @@ de:
     confirm_unban: "Benutzer entsperren?"
     confirm_delete: "Benutzer wirklich löschen? Dies kann nicht rückgängig gemacht werden!"
     banned_message: "Ihr Konto wurde gesperrt. Bitte wenden Sie sich an den Administrator."
+    create_user: "Benutzer erstellen"
+    new_user_form: "Neuen Benutzer anlegen"
+    prevented_saving: "verhinderten das Speichern"
+    first_name_placeholder: "Vorname eingeben..."
+    last_name_placeholder: "Nachname eingeben..."
+    first_name_required: "Vorname ist erforderlich"
+    last_name_required: "Nachname ist erforderlich"
+    email_required: "E-Mail-Adresse ist erforderlich"
+    generated_password: "Generiertes Passwort"
+    copy: "Kopieren"
+    copied: "Kopiert!"
+    password_info: "Dieses Passwort wurde automatisch generiert. Der Benutzer sollte es beim ersten Login ändern."
+    bio_placeholder: "Kurze Beschreibung über den Benutzer..."
+    location_placeholder: "Stadt, Land"
+    cancel: "Abbrechen"
 
   # User Status
   status:

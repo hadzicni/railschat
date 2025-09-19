@@ -1,0 +1,164 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">
+      <i class="bi bi-person-plus-fill me-2"></i>
+      <%= t('admin.create_user') %>
+    </h1>
+    <%= link_to admin_users_path, class: "btn btn-outline-secondary" do %>
+      <i class="bi bi-arrow-left me-1"></i>
+      <%= t('admin.back') %>
+    <% end %>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="card-title mb-0">
+            <i class="bi bi-person-badge me-2"></i>
+            <%= t('admin.new_user_form') %>
+          </h5>
+        </div>
+        <div class="card-body">
+          <%= form_with model: [:admin, @user], local: true, class: "needs-validation", novalidate: true do |form| %>
+            <!-- Hidden field for generated password -->
+            <%= hidden_field_tag :generated_password, @generated_password %>
+
+            <% if @user.errors.any? %>
+              <div class="alert alert-danger" role="alert">
+                <h6 class="alert-heading">
+                  <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                  <%= pluralize(@user.errors.count, t('forms.error_singular'), t('forms.error_plural')) %> <%= t('admin.prevented_saving') %>:
+                </h6>
+                <ul class="mb-0">
+                  <% @user.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <%= form.label :first_name, t('activerecord.attributes.user.first_name'), class: "form-label" %>
+                <%= form.text_field :first_name, class: "form-control", placeholder: t('admin.first_name_placeholder'), required: true %>
+                <div class="invalid-feedback">
+                  <%= t('admin.first_name_required') %>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <%= form.label :last_name, t('activerecord.attributes.user.last_name'), class: "form-label" %>
+                <%= form.text_field :last_name, class: "form-control", placeholder: t('admin.last_name_placeholder'), required: true %>
+                <div class="invalid-feedback">
+                  <%= t('admin.last_name_required') %>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <%= form.label :email, t('forms.email'), class: "form-label" %>
+              <%= form.email_field :email, class: "form-control", placeholder: "benutzer@example.com", required: true %>
+              <div class="invalid-feedback">
+                <%= t('admin.email_required') %>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">
+                <i class="bi bi-key me-1"></i>
+                <%= t('admin.generated_password') %>
+              </label>
+              <div class="input-group">
+                <input type="text" class="form-control bg-light" value="<%= @generated_password %>" readonly id="passwordField">
+                <button class="btn btn-outline-secondary" type="button" onclick="copyPassword()">
+                  <i class="bi bi-clipboard" id="copyIcon"></i>
+                  <span id="copyText"><%= t('admin.copy') %></span>
+                </button>
+              </div>
+              <div class="form-text">
+                <i class="bi bi-info-circle me-1"></i>
+                <%= t('admin.password_info') %>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <%= form.label :bio, t('activerecord.attributes.user.bio'), class: "form-label" %>
+                <%= form.text_area :bio, class: "form-control", rows: 3, placeholder: t('admin.bio_placeholder') %>
+              </div>
+
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <%= form.label :location, t('activerecord.attributes.user.location'), class: "form-label" %>
+                  <%= form.text_field :location, class: "form-control", placeholder: t('admin.location_placeholder') %>
+                </div>
+
+                <div class="mb-3">
+                  <%= form.label :website, t('activerecord.attributes.user.website'), class: "form-label" %>
+                  <%= form.url_field :website, class: "form-control", placeholder: "https://example.com" %>
+                </div>
+              </div>
+            </div>
+
+            <hr>
+
+            <div class="d-flex justify-content-between">
+              <%= link_to admin_users_path, class: "btn btn-secondary" do %>
+                <i class="bi bi-x-circle me-1"></i>
+                <%= t('admin.cancel') %>
+              <% end %>
+
+              <%= form.submit t('admin.create_user'), class: "btn btn-success" do %>
+                <i class="bi bi-person-plus me-1"></i>
+                <%= t('admin.create_user') %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function copyPassword() {
+  const passwordField = document.getElementById('passwordField');
+  const copyIcon = document.getElementById('copyIcon');
+  const copyText = document.getElementById('copyText');
+
+  passwordField.select();
+  passwordField.setSelectionRange(0, 99999); // For mobile devices
+
+  navigator.clipboard.writeText(passwordField.value).then(function() {
+    // Success feedback
+    copyIcon.className = 'bi bi-check-circle-fill text-success';
+    copyText.textContent = '<%= t('admin.copied') %>';
+
+    // Reset after 2 seconds
+    setTimeout(function() {
+      copyIcon.className = 'bi bi-clipboard';
+      copyText.textContent = '<%= t('admin.copy') %>';
+    }, 2000);
+  }, function(err) {
+    console.error('Could not copy text: ', err);
+  });
+}
+
+// Bootstrap form validation
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    var forms = document.getElementsByClassName('needs-validation');
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+</script>

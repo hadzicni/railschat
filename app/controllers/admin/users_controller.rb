@@ -14,6 +14,24 @@ class Admin::UsersController < Admin::BaseController
     @user_rooms = Room.joins(:messages).where(messages: { user: @user }).distinct.limit(5)
   end
 
+  def new
+    @user = User.new
+    @generated_password = generate_random_password
+  end
+
+  def create
+    @user = User.new(user_params)
+    @generated_password = params[:generated_password]
+    @user.password = @generated_password
+    @user.password_confirmation = @generated_password
+
+    if @user.save
+      redirect_to admin_user_path(@user), notice: "Benutzer erfolgreich erstellt. Temporäres Passwort: #{@generated_password}"
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
+
   def edit
   end
 
@@ -78,5 +96,11 @@ class Admin::UsersController < Admin::BaseController
 
   def user_params
     params.require(:user).permit(:first_name, :last_name, :email, :bio, :location, :website)
+  end
+
+  def generate_random_password
+    # Generate a random password with letters, numbers and special characters
+    charset = ("a".."z").to_a + ("A".."Z").to_a + (0..9).to_a + [ "!", "@", "#", "$", "%" ]
+    Array.new(12) { charset.sample }.join
   end
 end
