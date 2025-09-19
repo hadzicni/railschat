@@ -12,6 +12,12 @@ class ChatChannel < ApplicationCable::Channel
     room = Room.find(params[:room_id])
     user = current_user
 
+    # Check if user has permission to send messages
+    unless user.can?("send_messages")
+      reject
+      return
+    end
+
     message_params = {
       content: data["content"],
       user: user

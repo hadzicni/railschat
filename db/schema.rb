@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_19_114504) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_19_134515) do
   create_table "messages", force: :cascade do |t|
     t.text "content"
     t.integer "user_id", null: false
@@ -23,11 +23,30 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_19_114504) do
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
+  create_table "roles", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.string "color"
+    t.text "permissions"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "rooms", force: :cascade do |t|
     t.string "name"
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "user_roles", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "role_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "expires_at"
+    t.index ["role_id"], name: "index_user_roles_on_role_id"
+    t.index ["user_id"], name: "index_user_roles_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -43,7 +62,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_19_114504) do
     t.text "bio"
     t.string "location"
     t.string "website"
-    t.boolean "admin", default: false, null: false
     t.boolean "banned", default: false, null: false
     t.datetime "banned_at"
     t.text "banned_reason"
@@ -55,4 +73,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_19_114504) do
   add_foreign_key "messages", "messages", column: "reply_to_id"
   add_foreign_key "messages", "rooms"
   add_foreign_key "messages", "users"
+  add_foreign_key "user_roles", "roles"
+  add_foreign_key "user_roles", "users"
 end

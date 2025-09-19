@@ -71,6 +71,55 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Role Statistics -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Rollenverteilung</h5>
+        </div>
+        <div class="card-body">
+          <% if @role_distribution.any? %>
+            <% @role_distribution.each do |role_name, count| %>
+              <% role = Role.find_by(name: role_name) %>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div>
+                  <span class="badge" style="background-color: <%= role&.color || '#6c757d' %>; color: white;">
+                    <%= role_name.humanize %>
+                  </span>
+                </div>
+                <div>
+                  <span class="fw-bold"><%= count %> Benutzer</span>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-muted">Keine Rollenzuweisungen vorhanden</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Rollensystem</h5>
+        </div>
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h3 class="text-primary"><%= @total_roles %></h3>
+              <p class="mb-0">Aktive Rollen</p>
+            </div>
+            <div class="align-self-center">
+              <i class="bi bi-shield-check fs-1 text-primary"></i>
+            </div>
+          </div>
+          <%= link_to "Rollen verwalten", admin_roles_path, class: "btn btn-primary w-100" %>
+        </div>
+      </div>
+    </div>
   </div>  <!-- Quick Actions -->
   <div class="row mb-4">
     <div class="col-12">
@@ -83,6 +132,11 @@
             <div class="col-md-4">
               <%= link_to admin_users_path, class: "btn btn-outline-primary w-100 mb-2" do %>
                 <i class="bi bi-people me-2"></i>Benutzerverwaltung
+              <% end %>
+            </div>
+            <div class="col-md-4">
+              <%= link_to admin_roles_path, class: "btn btn-outline-warning w-100 mb-2" do %>
+                <i class="bi bi-shield-check me-2"></i>Rollenverwaltung
               <% end %>
             </div>
             <div class="col-md-4">

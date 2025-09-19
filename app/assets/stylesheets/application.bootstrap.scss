@@ -13,3 +13,32 @@ $dark: #212529;
 // Import Bootstrap
 @import '../../node_modules/bootstrap/scss/bootstrap';
 @import '../../node_modules/bootstrap-icons/font/bootstrap-icons';
+
+// Custom styles for role badges
+.role-badge {
+  font-size: 0.7rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  text-transform: capitalize;
+  vertical-align: middle;
+}
+
+.message-header .role-badge {
+  margin-left: 0.25rem;
+}
+
+// Role-specific colors
+.text-purple {
+  color: #6f42c1 !important;
+}
+
+// Admin panel custom styles
+.admin-table .role-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.admin-table .role-badges .badge {
+  font-size: 0.65rem;
+}

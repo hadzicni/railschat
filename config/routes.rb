@@ -25,9 +25,17 @@ Rails.application.routes.draw do
     resources :dashboard, only: [ :index ]
     resources :users do
       member do
-        patch :toggle_admin
         patch :ban_user
         patch :unban_user
+        post :assign_role
+        delete :remove_role
+      end
+    end
+
+    resources :roles do
+      member do
+        post "assign_to_user/:user_id", action: :assign_role, as: :assign_to_user
+        delete "remove_from_user/:user_id", action: :remove_role, as: :remove_from_user
       end
     end
   end

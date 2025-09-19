@@ -1,0 +1,75 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><%= t('admin.roles.edit_role') %></h2>
+        <%= link_to t('admin.common.back'), admin_roles_path, class: 'btn btn-secondary' %>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <%= form_with model: [:admin, @role], local: true do |f| %>
+            <% if @role.errors.any? %>
+              <div class="alert alert-danger">
+                <h6><%= t('admin.common.errors_found') %></h6>
+                <ul class="mb-0">
+                  <% @role.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <%= f.label :name, t('admin.roles.name'), class: 'form-label' %>
+                  <% if Role::SYSTEM_ROLES.key?(@role.name) %>
+                    <%= f.text_field :name, class: 'form-control', disabled: true %>
+                    <%= f.hidden_field :name %>
+                    <small class="text-muted"><%= t('admin.roles.system_role_name_readonly') %></small>
+                  <% else %>
+                    <%= f.text_field :name, class: 'form-control', required: true %>
+                  <% end %>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <%= f.label :color, t('admin.roles.color'), class: 'form-label' %>
+                  <%= f.color_field :color, class: 'form-control' %>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :description, t('admin.roles.description'), class: 'form-label' %>
+              <%= f.text_area :description, class: 'form-control', rows: 3 %>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label"><%= t('admin.roles.permissions') %></label>
+              <div class="row">
+                <% @available_permissions.each_with_index do |permission, index| %>
+                  <div class="col-md-4 mb-2">
+                    <div class="form-check">
+                      <%= check_box_tag "role[permissions][]", permission,
+                          @role.permissions&.include?(permission),
+                          { id: "permission_#{index}", class: 'form-check-input' } %>
+                      <%= label_tag "permission_#{index}", t("admin.permissions.#{permission}"),
+                          class: 'form-check-label' %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+              <%= link_to t('admin.common.cancel'), admin_roles_path, class: 'btn btn-secondary' %>
+              <%= f.submit t('admin.roles.update_role'), class: 'btn btn-primary' %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

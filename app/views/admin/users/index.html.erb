@@ -63,6 +63,7 @@
               <tr>
                 <th>Benutzer</th>
                 <th>E-Mail</th>
+                <th>Rollen</th>
                 <th>Status</th>
                 <th>Nachrichten</th>
                 <th>Registriert</th>
@@ -89,6 +90,13 @@
                     <%= user.email %>
                     <% if user == current_user %>
                       <span class="badge bg-primary ms-2">Du</span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <% user.roles.each do |role| %>
+                      <span class="badge me-1" style="background-color: <%= role.color %>; color: white;">
+                        <%= role.name %>
+                      </span>
                     <% end %>
                   </td>
                   <td>
@@ -122,15 +130,6 @@
                       <% end %>
 
                       <% if user != current_user %>
-                        <%= form_with url: toggle_admin_admin_user_path(user), method: :patch, local: true, class: "d-inline" do |form| %>
-                          <button type="submit"
-                                  class="btn btn-sm <%= user.admin? ? 'btn-warning' : 'btn-success' %>"
-                                  title="<%= user.admin? ? 'Admin entfernen' : 'Zum Admin machen' %>"
-                                  onclick="return confirm('Bist du sicher?')">
-                            <i class="bi bi-shield<%= user.admin? ? '-x' : '-check' %>"></i>
-                          </button>
-                        <% end %>
-
                         <% if user.banned? %>
                           <%= form_with url: unban_user_admin_user_path(user), method: :patch, local: true, class: "d-inline" do |form| %>
                             <button type="submit"

@@ -5,7 +5,7 @@ class Admin::BaseController < ApplicationController
   private
 
   def ensure_admin!
-    unless current_user.admin?
+    unless current_user.admin? || current_user.can?("view_admin_panel")
       redirect_to root_path, alert: "Zugriff verweigert. Administrator-Rechte erforderlich."
     end
   end

@@ -1,5 +1,6 @@
 class MessagesController < ApplicationController
   before_action :authenticate_user!
+  before_action :check_send_permission
 
   # This controller is now primarily used as fallback
   # Main message sending happens via WebSocket in ChatChannel
@@ -21,5 +22,11 @@ class MessagesController < ApplicationController
 
   def message_params
     params.require(:message).permit(:content, :reply_to_id)
+  end
+
+  def check_send_permission
+    unless current_user.can?("send_messages")
+      redirect_to root_path, alert: "Sie haben keine Berechtigung, Nachrichten zu senden."
+    end
   end
 end

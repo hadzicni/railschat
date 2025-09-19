@@ -1,0 +1,70 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><%= t('admin.roles.title') %></h2>
+        <%= link_to t('admin.roles.new_role'), new_admin_role_path, class: 'btn btn-primary' %>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col-md-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <h3 class="card-title text-primary"><%= @roles.count %></h3>
+              <p class="card-text"><%= t('admin.roles.total_roles') %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0"><%= t('admin.roles.all_roles') %></h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th><%= t('admin.roles.name') %></th>
+                  <th><%= t('admin.roles.description') %></th>
+                  <th><%= t('admin.roles.users_count') %></th>
+                  <th><%= t('admin.roles.permissions_count') %></th>
+                  <th><%= t('admin.roles.actions') %></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @roles.each do |role| %>
+                  <tr>
+                    <td>
+                      <span class="badge" style="background-color: <%= role.color %>; color: white;">
+                        <%= role.name.humanize %>
+                      </span>
+                    </td>
+                    <td><%= role.description %></td>
+                    <td>
+                      <%= link_to @users_count[role.id], admin_role_path(role), class: 'text-decoration-none' %>
+                    </td>
+                    <td><%= role.permissions&.length || 0 %></td>
+                    <td>
+                      <%= link_to t('admin.common.view'), admin_role_path(role), class: 'btn btn-sm btn-outline-primary' %>
+                      <%= link_to t('admin.common.edit'), edit_admin_role_path(role), class: 'btn btn-sm btn-outline-secondary' %>
+                      <% unless Role::SYSTEM_ROLES.key?(role.name) %>
+                        <%= link_to t('admin.common.delete'), admin_role_path(role),
+                            method: :delete,
+                            data: {
+                              confirm: t('admin.roles.delete_confirmation', role: role.name)
+                            },
+                            class: 'btn btn-sm btn-outline-danger' %>
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

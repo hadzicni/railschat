@@ -1,0 +1,152 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+          <span class="badge me-2" style="background-color: <%= @role.color %>; color: white;">
+            <%= @role.name.humanize %>
+          </span>
+          <%= t('admin.roles.role_details') %>
+        </h2>
+        <div>
+          <%= link_to t('admin.common.edit'), edit_admin_role_path(@role), class: 'btn btn-primary me-2' %>
+          <%= link_to t('admin.common.back'), admin_roles_path, class: 'btn btn-secondary' %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0"><%= t('admin.roles.role_information') %></h5>
+            </div>
+            <div class="card-body">
+              <table class="table table-borderless">
+                <tr>
+                  <td><strong><%= t('admin.roles.name') %>:</strong></td>
+                  <td><%= @role.name.humanize %></td>
+                </tr>
+                <tr>
+                  <td><strong><%= t('admin.roles.description') %>:</strong></td>
+                  <td><%= @role.description %></td>
+                </tr>
+                <tr>
+                  <td><strong><%= t('admin.roles.color') %>:</strong></td>
+                  <td>
+                    <span class="badge" style="background-color: <%= @role.color %>; color: white;">
+                      <%= @role.color %>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong><%= t('admin.roles.users_count') %>:</strong></td>
+                  <td><%= @users.count %></td>
+                </tr>
+                <tr>
+                  <td><strong><%= t('admin.roles.permissions_count') %>:</strong></td>
+                  <td><%= @role.permissions&.length || 0 %></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="card mt-3">
+            <div class="card-header">
+              <h5 class="mb-0"><%= t('admin.roles.permissions') %></h5>
+            </div>
+            <div class="card-body">
+              <% if @role.permissions&.any? %>
+                <% @role.permissions.each do |permission| %>
+                  <span class="badge bg-secondary me-1 mb-1">
+                    <%= t("admin.permissions.#{permission}") %>
+                  </span>
+                <% end %>
+              <% else %>
+                <p class="text-muted"><%= t('admin.roles.no_permissions') %></p>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">
+                <%= t('admin.roles.users_with_role') %>
+                <span class="badge bg-primary"><%= @users.count %></span>
+              </h5>
+            </div>
+            <div class="card-body">
+              <% if @users.any? %>
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th><%= t('admin.users.name') %></th>
+                        <th><%= t('admin.users.email') %></th>
+                        <th><%= t('admin.users.all_roles') %></th>
+                        <th><%= t('admin.users.status') %></th>
+                        <th><%= t('admin.common.actions') %></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @users.each do |user| %>
+                        <tr>
+                          <td>
+                            <div class="d-flex align-items-center">
+                              <div class="avatar-circle bg-primary text-white me-2">
+                                <%= user.initials %>
+                              </div>
+                              <%= user.display_name %>
+                            </div>
+                          </td>
+                          <td><%= user.email %></td>
+                          <td>
+                            <% user.roles.each do |role| %>
+                              <span class="badge me-1" style="background-color: <%= role.color %>; color: white;">
+                                <%= role.name %>
+                              </span>
+                            <% end %>
+                          </td>
+                          <td>
+                            <% if user.banned? %>
+                              <span class="badge bg-danger"><%= t('admin.users.banned') %></span>
+                            <% elsif user.admin? %>
+                              <span class="badge bg-warning"><%= t('admin.users.admin') %></span>
+                            <% else %>
+                              <span class="badge bg-success"><%= t('admin.users.active') %></span>
+                            <% end %>
+                          </td>
+                          <td>
+                            <%= link_to t('admin.common.view'), admin_user_path(user), class: 'btn btn-sm btn-outline-primary' %>
+                          </td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              <% else %>
+                <p class="text-muted text-center py-4">
+                  <%= t('admin.roles.no_users_with_role') %>
+                </p>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.avatar-circle {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.8rem;
+}
+</style>

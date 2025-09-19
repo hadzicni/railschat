@@ -87,6 +87,61 @@
           <% end %>
         </div>
       </div>
+
+      <!-- Role Management -->
+      <div class="card mt-3">
+        <div class="card-header">
+          <h6 class="mb-0">Rollenverwaltung</h6>
+        </div>
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-sm-5"><strong>Aktuelle Rollen:</strong></div>
+            <div class="col-sm-7">
+              <% @user_roles.each do |role| %>
+                <span class="badge me-1" style="background-color: <%= role.color %>; color: white;">
+                  <%= role.name %>
+                  <% if @user.can_have_roles_modified_by?(current_user) %>
+                    <%= link_to remove_role_admin_user_path(@user, role_id: role.id),
+                        method: :delete,
+                        data: { confirm: "Rolle '#{role.name}' entfernen?" },
+                        class: 'text-white text-decoration-none ms-1',
+                        style: 'opacity: 0.8;' do %>
+                      ×
+                    <% end %>
+                  <% end %>
+                </span>
+              <% end %>
+              <% if @user_roles.empty? %>
+                <span class="text-muted">Keine Rollen zugewiesen</span>
+              <% end %>
+            </div>
+          </div>
+
+          <% if @user.can_have_roles_modified_by?(current_user) %>
+            <div class="row">
+              <div class="col-sm-5"><strong>Rolle hinzufügen:</strong></div>
+              <div class="col-sm-7">
+                <%= form_with url: assign_role_admin_user_path(@user), method: :post, local: true, class: 'd-flex' do |f| %>
+                  <%= f.select :role_id,
+                      options_from_collection_for_select(@available_roles.reject { |r| @user.has_role?(r.name) }, :id, :name),
+                      { prompt: 'Rolle auswählen' },
+                      { class: 'form-select me-2' } %>
+                  <%= f.submit 'Hinzufügen', class: 'btn btn-sm btn-primary' %>
+                <% end %>
+              </div>
+            </div>
+          <% else %>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="alert alert-info">
+                  <i class="bi bi-info-circle me-2"></i>
+                  Du hast keine Berechtigung, Rollen zu bearbeiten.
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
     </div>
 
     <!-- Activity Information -->
@@ -163,18 +218,7 @@
       </div>
       <div class="card-body">
         <div class="row">
-          <div class="col-md-6">
-            <h6><%= t('admin.change_admin_status') %></h6>
-            <p class="text-muted small"><%= t('admin.grant_or_revoke_admin') %></p>
-            <%= form_with url: toggle_admin_admin_user_path(@user), method: :patch, local: true do |form| %>
-              <button type="submit"
-                      class="btn <%= @user.admin? ? 'btn-warning' : 'btn-success' %>"
-                      onclick="return confirm('<%= t('admin.confirm_admin') %>')">
-                <i class="bi bi-shield<%= @user.admin? ? '-x' : '-check' %> me-2"></i>
-                <%= @user.admin? ? t('admin.remove_admin') : t('admin.make_admin') %>
-              </button>
-            <% end %>
-          </div>
+
           <div class="col-md-4">
             <h6><%= t('admin.ban_unban_user') %></h6>
             <p class="text-muted small"><%= t('admin.ban_or_unban_desc') %></p>

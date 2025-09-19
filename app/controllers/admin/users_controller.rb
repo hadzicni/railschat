@@ -1,17 +1,20 @@
 class Admin::UsersController < Admin::BaseController
-  before_action :set_user, only: [ :show, :edit, :update, :destroy, :toggle_admin, :ban_user, :unban_user ]
+  before_action :set_user, only: [ :show, :edit, :update, :destroy, :ban_user, :unban_user, :assign_role, :remove_role ]
 
   def index
-    @users = User.includes(:messages).order(:email)
+    @users = User.includes(:messages, :roles).order(:email)
     @total_users = @users.count
-    @admin_users = @users.admins.count
-    @regular_users = @users.regular_users.count
+    @admin_users = User.joins(:roles).where(roles: { name: "admin" }).count
+    @regular_users = @total_users - @admin_users
     @banned_users = @users.banned_users.count
+    @roles = Role.all.order(:name)
   end
 
   def show
     @user_messages = @user.messages.includes(:room).order(created_at: :desc).limit(10)
     @user_rooms = Room.joins(:messages).where(messages: { user: @user }).distinct.limit(5)
+    @available_roles = Role.all.order(:name)
+    @user_roles = @user.roles.order(:name)
   end
 
   def new
@@ -52,21 +55,32 @@ class Admin::UsersController < Admin::BaseController
     end
   end
 
-  def toggle_admin
-    if @user == current_user
-      redirect_to admin_users_path, alert: "Du kannst deine eigenen Admin-Rechte nicht ändern."
-      return
-    end
+  def assign_role
+    @role = Role.find(params[:role_id])
 
-    if @user.admin?
-      @user.remove_admin!
-      message = "Administrator-Rechte entfernt."
+    if @user.can_have_roles_modified_by?(current_user)
+      if @user.add_role(@role.name)
+        redirect_to admin_user_path(@user), notice: "Rolle '#{@role.name}' wurde #{@user.display_name} zugewiesen."
+      else
+        redirect_to admin_user_path(@user), alert: "Rolle konnte nicht zugewiesen werden."
+      end
     else
-      @user.make_admin!
-      message = "Administrator-Rechte gewährt."
+      redirect_to admin_user_path(@user), alert: "Du hast keine Berechtigung, Rollen zu bearbeiten."
     end
+  end
 
-    redirect_to admin_users_path, notice: message
+  def remove_role
+    @role = Role.find(params[:role_id])
+
+    if @user.can_have_roles_modified_by?(current_user)
+      if @user.remove_role(@role.name)
+        redirect_to admin_user_path(@user), notice: "Rolle '#{@role.name}' wurde von #{@user.display_name} entfernt."
+      else
+        redirect_to admin_user_path(@user), alert: "Rolle konnte nicht entfernt werden."
+      end
+    else
+      redirect_to admin_user_path(@user), alert: "Du hast keine Berechtigung, Rollen zu bearbeiten."
+    end
   end
 
   def ban_user
