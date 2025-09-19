@@ -23,5 +23,10 @@ module ProjektarbeitChatapp
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # Set default locale to English and available locales
+    config.i18n.default_locale = :en
+    config.i18n.available_locales = [ :de, :en ]
+    config.i18n.fallbacks = [ :en ]
   end
 end

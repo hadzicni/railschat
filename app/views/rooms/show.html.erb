@@ -12,13 +12,13 @@
               </h3>
               <p class="text-muted mb-0">
                 <i class="bi bi-people me-1"></i>
-                <%= @room.messages.select(:user_id).distinct.count %> Teilnehmer
+                <%= @room.messages.select(:user_id).distinct.count %> <%= t('rooms.participants') %>
               </p>
             </div>
             <div>
               <%= link_to rooms_path, class: "btn btn-outline-secondary" do %>
                 <i class="bi bi-arrow-left me-1"></i>
-                Zurück
+                <%= t('admin.back') %>
               <% end %>
             </div>
           </div>
@@ -54,8 +54,8 @@
             <% else %>
               <div class="text-center text-muted py-5" id="no-messages">
                 <i class="bi bi-chat-square-dots fs-1 mb-3 d-block"></i>
-                <h5>Noch keine Nachrichten in diesem Chatraum</h5>
-                <p>Sei der Erste und starte die Unterhaltung!</p>
+                <h5><%= t('chat.no_messages_room') %></h5>
+                <p><%= t('chat.start_conversation') %></p>
               </div>
             <% end %>
           </div>
@@ -68,7 +68,7 @@
                 <div class="flex-grow-1">
                   <div class="d-flex align-items-center gap-2 mb-1">
                     <i class="bi bi-reply text-primary"></i>
-                    <small class="text-muted">Antwort auf <span id="reply-user-name"></span></small>
+                    <small class="text-muted"><%= t('chat.reply_to') %> <span id="reply-user-name"></span></small>
                   </div>
                   <div class="reply-content text-muted small" id="reply-content-preview"></div>
                 </div>
@@ -85,7 +85,7 @@
               <%= form.hidden_field :reply_to_id, id: "reply-to-id" %>
               <div class="flex-grow-1">
                 <%= form.text_area :content,
-                    placeholder: "Schreibe eine Nachricht...",
+                    placeholder: t('chat.enter_message'),
                     class: "form-control border-0",
                     rows: 1,
                     id: "message-input",
@@ -95,7 +95,7 @@
               <div class="align-self-end">
                 <button type="submit" class="btn btn-primary px-4 py-2 d-flex align-items-center gap-2 modern-send-btn" id="send-button">
                   <i class="bi bi-send-fill"></i>
-                  <span>Senden</span>
+                  <span><%= t('chat.send_message') %></span>
                 </button>
               </div>
             <% end %>
@@ -406,6 +406,8 @@
   document.addEventListener('DOMContentLoaded', function() {
     const roomId = <%= @room.id %>;
     const currentUserId = <%= current_user.id %>;
+    // Make currentUserId globally available
+    window.currentUserId = currentUserId;
     let consumer, subscription;
     let replyToId = null;
 
@@ -497,6 +499,48 @@
             bubbleContainer.classList.remove('justify-content-start');
             bubbleContainer.classList.add('justify-content-end');
           }
+
+          // Hide username for own messages
+          const messageHeader = tempDiv.querySelector('.message-header');
+          if (messageHeader) {
+            messageHeader.style.display = 'none';
+          }
+
+          // Move avatar to the right side and update styling
+          const avatar = tempDiv.querySelector('.profile-avatar');
+          if (avatar) {
+            avatar.classList.remove('me-2');
+            avatar.classList.add('ms-2');
+            // Move avatar after the message bubble
+            const messageBubble = tempDiv.querySelector('.message-bubble');
+            if (messageBubble && messageBubble.parentNode) {
+              messageBubble.parentNode.appendChild(avatar);
+            }
+          }
+
+          // Update reply button styling
+          const replyBtn = tempDiv.querySelector('.reply-btn');
+          if (replyBtn) {
+            const icon = replyBtn.querySelector('i');
+            if (icon) {
+              icon.style.color = 'rgba(255,255,255,0.7)';
+              icon.classList.remove('text-muted');
+            }
+          }
+
+          // Update timestamp styling
+          const timestamp = tempDiv.querySelector('.timestamp');
+          if (timestamp) {
+            timestamp.classList.remove('text-muted');
+            timestamp.classList.add('text-light');
+          }
+
+          // Update message footer layout
+          const messageFooter = tempDiv.querySelector('.message-footer');
+          if (messageFooter) {
+            messageFooter.classList.remove('justify-content-end');
+            messageFooter.classList.add('justify-content-between');
+          }
         } else {
           console.log('👥 This is someone else\'s message - styling as other message');
           // Ensure it's marked as other message
@@ -517,6 +561,43 @@
           if (bubbleContainer) {
             bubbleContainer.classList.remove('justify-content-end');
             bubbleContainer.classList.add('justify-content-start');
+          }
+
+          // Ensure username is visible for other messages
+          const messageHeader = tempDiv.querySelector('.message-header');
+          if (messageHeader) {
+            messageHeader.style.display = 'block';
+          }
+
+          // Ensure avatar is on the left side
+          const avatar = tempDiv.querySelector('.profile-avatar');
+          if (avatar) {
+            avatar.classList.remove('ms-2');
+            avatar.classList.add('me-2');
+          }
+
+          // Update reply button styling for other messages
+          const replyBtn = tempDiv.querySelector('.reply-btn');
+          if (replyBtn) {
+            const icon = replyBtn.querySelector('i');
+            if (icon) {
+              icon.style.color = '';
+              icon.classList.add('text-muted');
+            }
+          }
+
+          // Update timestamp styling for other messages
+          const timestamp = tempDiv.querySelector('.timestamp');
+          if (timestamp) {
+            timestamp.classList.remove('text-light');
+            timestamp.classList.add('text-muted');
+          }
+
+          // Update message footer layout for other messages
+          const messageFooter = tempDiv.querySelector('.message-footer');
+          if (messageFooter) {
+            messageFooter.classList.remove('justify-content-between');
+            messageFooter.classList.add('justify-content-end');
           }
         }
 

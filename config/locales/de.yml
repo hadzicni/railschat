@@ -1,0 +1,242 @@
+de:
+  datetime:
+    distance_in_words:
+      about_x_hours:
+        one: "etwa eine Stunde"
+        other: "etwa %{count} Stunden"
+      about_x_months:
+        one: "etwa ein Monat"
+        other: "etwa %{count} Monate"
+      about_x_years:
+        one: "etwa ein Jahr"
+        other: "etwa %{count} Jahre"
+      almost_x_years:
+        one: "fast ein Jahr"
+        other: "fast %{count} Jahre"
+      half_a_minute: "eine halbe Minute"
+      less_than_x_minutes:
+        one: "weniger als eine Minute"
+        other: "weniger als %{count} Minuten"
+      less_than_x_seconds:
+        one: "weniger als eine Sekunde"
+        other: "weniger als %{count} Sekunden"
+      over_x_years:
+        one: "mehr als ein Jahr"
+        other: "mehr als %{count} Jahre"
+      x_days:
+        one: "ein Tag"
+        other: "%{count} Tage"
+      x_minutes:
+        one: "eine Minute"
+        other: "%{count} Minuten"
+      x_months:
+        one: "ein Monat"
+        other: "%{count} Monate"
+      x_seconds:
+        one: "eine Sekunde"
+        other: "%{count} Sekunden"
+      x_years:
+        one: "ein Jahr"
+        other: "%{count} Jahre"
+
+  # Navigation
+  nav:
+    home: "Startseite"
+    rooms: "Räume"
+    admin: "Admin"
+    profile: "Profil"
+    logout: "Abmelden"
+    login: "Anmelden"
+    register: "Registrieren"
+
+  # Chat
+  chat:
+    send_message: "Senden"
+    reply_to: "Antworten auf"
+    reply: "Antworten"
+    enter_message: "Schreibe eine Nachricht..."
+    no_messages: "Noch keine Nachrichten. Starte die Unterhaltung!"
+    no_messages_room: "Noch keine Nachrichten in diesem Chatraum"
+    start_conversation: "Sei der Erste und starte die Unterhaltung!"
+
+  # Admin
+  admin:
+    dashboard: "Dashboard"
+    welcome_admin: "Willkommen im Administrationsbereich"
+    back_to_app: "Zurück zur Anwendung"
+    users: "Benutzer"
+    user_details: "Benutzer Details"
+    information_about: "Informationen über %{user}"
+    edit: "Bearbeiten"
+    back: "Zurück"
+    statistics: "Statistiken"
+    total_users: "Benutzer gesamt"
+    banned_users: "Gesperrte Benutzer"
+    admin_users: "Administratoren"
+    messages: "Nachrichten"
+    active_rooms: "Aktive Räume"
+    member_since: "Mitglied seit"
+    latest_messages: "Neueste Nachrichten"
+    no_messages_written: "Noch keine Nachrichten geschrieben"
+    show_all_messages_from: "Alle Nachrichten von %{user} anzeigen"
+    admin_actions: "Administratoraktionen"
+    change_admin_status: "Admin-Status ändern"
+    grant_or_revoke_admin: "Gewähre oder entziehe Administrator-Rechte"
+    ban_unban_user: "Benutzer sperren/entsperren"
+    ban_or_unban_desc: "Verhindere oder erlaube die Anmeldung"
+    dangerous_actions: "Gefährliche Aktionen"
+    irreversible_actions: "Diese Aktionen sind nicht rückgängig zu machen"
+    delete_user: "Benutzer löschen"
+    make_admin: "Zum Administrator machen"
+    remove_admin: "Admin-Rechte entfernen"
+    ban_user: "Benutzer sperren"
+    unban_user: "Entsperren"
+    ban_reason_placeholder: "Grund für die Sperrung..."
+    confirm_admin: "Bist du sicher?"
+    confirm_ban: "Benutzer sperren?"
+    confirm_unban: "Benutzer entsperren?"
+    confirm_delete: "Benutzer wirklich löschen? Dies kann nicht rückgängig gemacht werden!"
+    banned_message: "Ihr Konto wurde gesperrt. Bitte wenden Sie sich an den Administrator."
+
+  # User Status
+  status:
+    banned: "Gesperrt"
+    admin: "Administrator"
+    user: "Benutzer"
+    you: "Du"
+    since: "seit %{date}"
+
+  # Account Information
+  account:
+    registered: "Registriert"
+    updated: "Aktualisiert"
+    status: "Status"
+    reason: "Grund"
+    bio: "Bio"
+    location: "Ort"
+    website: "Website"
+
+  # Forms
+  forms:
+    email: "E-Mail"
+    password: "Passwort"
+    confirm_password: "Passwort bestätigen"
+    remember_me: "Angemeldet bleiben"
+    forgot_password: "Passwort vergessen?"
+    sign_in: "Anmelden"
+    sign_up: "Registrieren"
+    cancel_account: "Konto löschen"
+    update_profile: "Profil aktualisieren"
+    current_password: "Aktuelles Passwort"
+    leave_blank: "leer lassen wenn du es nicht ändern möchtest"
+    current_password_confirm: "wir benötigen dein aktuelles Passwort um die Änderungen zu bestätigen"
+    error_singular: "Fehler"
+    error_plural: "Fehler"
+
+  # Rooms
+  rooms:
+    title: "Chat-Räume"
+    select_or_create: "Wähle einen Chatraum oder erstelle einen neuen"
+    available_rooms: "Verfügbare Chaträume"
+    room_singular: "Raum"
+    room_plural: "Räume"
+    participants: "Teilnehmer"
+    message_singular: "Nachricht"
+    message_plural: "Nachrichten"
+    last_active: "Zuletzt aktiv"
+    new: "Neu"
+    enter: "Betreten"
+    no_rooms_yet: "Noch keine Chaträume vorhanden"
+    create_first_room: "Erstelle den ersten Chatraum!"
+    create_new_room: "Neuen Chatraum erstellen"
+    create_new: "Neuen Raum erstellen"
+    name: "Raumname"
+    name_placeholder: "z.B. Allgemein, Gaming, Technik..."
+    description: "Beschreibung (optional)"
+    description_placeholder: "Beschreibe worum es in diesem Chatraum geht..."
+    create: "Raum erstellen"
+    create_room: "Chatraum erstellen"
+    join: "Beitreten"
+    members: "Mitglieder"
+    no_rooms: "Noch keine Räume verfügbar"
+    create_first: "Sei der Erste, der einen Raum erstellt!"
+    statistics: "Statistiken"
+    rooms: "Räume"
+
+  # Language
+  language:
+    select: "Sprache wählen"
+    german: "Deutsch"
+    english: "English"
+
+  # Home page
+  home:
+    welcome_title: "Willkommen bei RailsChat"
+    welcome_description: "Eine einfache Chat-Applikation für Echtzeit-Kommunikation in Teams und Gruppen."
+    register_now: "Jetzt registrieren"
+    already_registered: "Bereits registriert? Anmelden"
+    realtime_chat: "Echtzeit-Chat"
+    realtime_chat_desc: "Sende und empfange Nachrichten in Echtzeit mit anderen Benutzern."
+    multiple_rooms: "Mehrere Chaträume"
+    multiple_rooms_desc: "Erstelle oder betrete verschiedene Chaträume für unterschiedliche Themen."
+    user_friendly: "Benutzerfreundlich"
+    user_friendly_desc: "Einfache und intuitive Oberfläche für eine angenehme Chat-Erfahrung."
+
+  # ActiveRecord translations
+  activerecord:
+    attributes:
+      user:
+        email: "E-Mail"
+        password: "Passwort"
+        password_confirmation: "Passwort bestätigen"
+        first_name: "Vorname"
+        last_name: "Nachname"
+        bio: "Beschreibung"
+        location: "Ort"
+        website: "Website"
+      room:
+        name: "Name"
+        description: "Beschreibung"
+      message:
+        content: "Inhalt"
+    models:
+      user: "Benutzer"
+      room: "Raum"
+      message: "Nachricht"
+
+  # Devise translations
+  devise:
+    failure:
+      user:
+        banned: "Ihr Konto wurde gesperrt. Bitte wenden Sie sich an den Administrator."
+        invalid: "Ungültige E-Mail oder Passwort."
+        unauthenticated: "Sie müssen sich anmelden oder registrieren, bevor Sie fortfahren können."
+        timeout: "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."
+    sessions:
+      user:
+        signed_in: "Erfolgreich angemeldet."
+        signed_out: "Erfolgreich abgemeldet."
+    registrations:
+      user:
+        signed_up: "Willkommen! Sie haben sich erfolgreich registriert."
+        updated: "Ihr Konto wurde erfolgreich aktualisiert."
+        destroyed: "Auf Wiedersehen! Ihr Konto wurde erfolgreich gelöscht."
+    passwords:
+      user:
+        send_instructions: "Sie erhalten in wenigen Minuten eine E-Mail mit der Anleitung, wie Sie Ihr Passwort zurücksetzen können."
+        updated: "Ihr Passwort wurde erfolgreich geändert. Sie sind jetzt angemeldet."
+
+  # Helpers
+  helpers:
+    submit:
+      create: "Erstellen"
+      update: "Aktualisieren"
+      submit: "Senden"
+      room:
+        create: "Chatraum erstellen"
+        update: "Chatraum aktualisieren"
+      message:
+        create: "Senden"
+      user:
+        create: "Registrieren"
+        update: "Profil aktualisieren"

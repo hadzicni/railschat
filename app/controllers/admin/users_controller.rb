@@ -1,11 +1,12 @@
 class Admin::UsersController < Admin::BaseController
-  before_action :set_user, only: [ :show, :edit, :update, :destroy, :toggle_admin ]
+  before_action :set_user, only: [ :show, :edit, :update, :destroy, :toggle_admin, :ban_user, :unban_user ]
 
   def index
     @users = User.includes(:messages).order(:email)
     @total_users = @users.count
     @admin_users = @users.admins.count
     @regular_users = @users.regular_users.count
+    @banned_users = @users.banned_users.count
   end
 
   def show
@@ -48,6 +49,25 @@ class Admin::UsersController < Admin::BaseController
     end
 
     redirect_to admin_users_path, notice: message
+  end
+
+  def ban_user
+    if @user.can_be_banned_by?(current_user)
+      reason = params[:reason] || "Verstoß gegen die Nutzungsrichtlinien"
+      @user.ban!(reason)
+      redirect_to admin_users_path, notice: "Benutzer #{@user.display_name} wurde gesperrt."
+    else
+      redirect_to admin_users_path, alert: "Benutzer konnte nicht gesperrt werden."
+    end
+  end
+
+  def unban_user
+    if @user.can_be_unbanned_by?(current_user)
+      @user.unban!
+      redirect_to admin_users_path, notice: "Benutzer #{@user.display_name} wurde entsperrt."
+    else
+      redirect_to admin_users_path, alert: "Benutzer konnte nicht entsperrt werden."
+    end
   end
 
   private

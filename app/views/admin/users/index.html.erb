@@ -12,7 +12,7 @@
 
   <!-- Statistics -->
   <div class="row mb-4">
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="card bg-light">
         <div class="card-body text-center">
           <h3 class="text-primary"><%= @total_users %></h3>
@@ -20,7 +20,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="card bg-light">
         <div class="card-body text-center">
           <h3 class="text-success"><%= @admin_users %></h3>
@@ -28,11 +28,19 @@
         </div>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="card bg-light">
         <div class="card-body text-center">
           <h3 class="text-info"><%= @regular_users %></h3>
           <p class="mb-0">Normale Benutzer</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-light">
+        <div class="card-body text-center">
+          <h3 class="text-danger"><%= @banned_users %></h3>
+          <p class="mb-0">Gesperrte Benutzer</p>
         </div>
       </div>
     </div>
@@ -80,7 +88,12 @@
                     <% end %>
                   </td>
                   <td>
-                    <% if user.admin? %>
+                    <% if user.banned? %>
+                      <span class="badge bg-danger">Gesperrt</span>
+                      <% if user.banned_at %>
+                        <br><small class="text-muted">seit <%= user.banned_at.strftime('%d.%m.%Y') %></small>
+                      <% end %>
+                    <% elsif user.admin? %>
                       <span class="badge bg-success">Administrator</span>
                     <% else %>
                       <span class="badge bg-secondary">Benutzer</span>
@@ -112,6 +125,26 @@
                                   onclick="return confirm('Bist du sicher?')">
                             <i class="bi bi-shield<%= user.admin? ? '-x' : '-check' %>"></i>
                           </button>
+                        <% end %>
+
+                        <% if user.banned? %>
+                          <%= form_with url: unban_user_admin_user_path(user), method: :patch, local: true, class: "d-inline" do |form| %>
+                            <button type="submit"
+                                    class="btn btn-sm btn-success"
+                                    title="Entsperren"
+                                    onclick="return confirm('Benutzer entsperren?')">
+                              <i class="bi bi-unlock"></i>
+                            </button>
+                          <% end %>
+                        <% else %>
+                          <%= form_with url: ban_user_admin_user_path(user), method: :patch, local: true, class: "d-inline" do |form| %>
+                            <button type="submit"
+                                    class="btn btn-sm btn-warning"
+                                    title="Sperren"
+                                    onclick="return confirm('Benutzer sperren?')">
+                              <i class="bi bi-ban"></i>
+                            </button>
+                          <% end %>
                         <% end %>
 
                         <%= form_with url: admin_user_path(user), method: :delete, local: true, class: "d-inline" do |form| %>

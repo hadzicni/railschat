@@ -1,16 +1,16 @@
 <div class="row justify-content-center">
   <div class="col-md-8">
     <div class="text-center">
-      <h1 class="display-4 mb-4">Willkommen bei RailsChat</h1>
+      <h1 class="display-4 mb-4"><%= t('home.welcome_title') %></h1>
       <p class="lead mb-4">
-        Eine einfache Chat-Applikation für Echtzeit-Kommunikation in Teams und Gruppen.
+        <%= t('home.welcome_description') %>
       </p>
 
       <% unless user_signed_in? %>
         <div class="d-grid gap-2 d-md-block">
-          <%= link_to "Jetzt registrieren", new_user_registration_path,
+          <%= link_to t('home.register_now'), new_user_registration_path,
               class: "btn btn-primary btn-lg me-2" %>
-          <%= link_to "Bereits registriert? Anmelden", new_user_session_path,
+          <%= link_to t('home.already_registered'), new_user_session_path,
               class: "btn btn-outline-primary btn-lg" %>
         </div>
       <% end %>
@@ -25,8 +25,8 @@
       <div class="col-md-4 text-center mb-4">
         <div class="card h-100">
           <div class="card-body">
-            <h5 class="card-title">Echtzeit-Chat</h5>
-            <p class="card-text">Sende und empfange Nachrichten in Echtzeit mit anderen Benutzern.</p>
+            <h5 class="card-title"><%= t('home.realtime_chat') %></h5>
+            <p class="card-text"><%= t('home.realtime_chat_desc') %></p>
           </div>
         </div>
       </div>
@@ -34,8 +34,8 @@
       <div class="col-md-4 text-center mb-4">
         <div class="card h-100">
           <div class="card-body">
-            <h5 class="card-title">Mehrere Chaträume</h5>
-            <p class="card-text">Erstelle oder betrete verschiedene Chaträume für unterschiedliche Themen.</p>
+            <h5 class="card-title"><%= t('home.multiple_rooms') %></h5>
+            <p class="card-text"><%= t('home.multiple_rooms_desc') %></p>
           </div>
         </div>
       </div>
@@ -43,8 +43,8 @@
       <div class="col-md-4 text-center mb-4">
         <div class="card h-100">
           <div class="card-body">
-            <h5 class="card-title">Benutzerfreundlich</h5>
-            <p class="card-text">Einfache und intuitive Oberfläche für eine angenehme Chat-Erfahrung.</p>
+            <h5 class="card-title"><%= t('home.user_friendly') %></h5>
+            <p class="card-text"><%= t('home.user_friendly_desc') %></p>
           </div>
         </div>
       </div>

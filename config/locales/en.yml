@@ -29,3 +29,186 @@
 
 en:
   hello: "Hello world"
+
+  datetime:
+    distance_in_words:
+      about_x_hours:
+        one: "about 1 hour"
+        other: "about %{count} hours"
+      about_x_months:
+        one: "about 1 month"
+        other: "about %{count} months"
+      about_x_years:
+        one: "about 1 year"
+        other: "about %{count} years"
+      almost_x_years:
+        one: "almost 1 year"
+        other: "almost %{count} years"
+      half_a_minute: "half a minute"
+      less_than_x_minutes:
+        one: "less than a minute"
+        other: "less than %{count} minutes"
+      less_than_x_seconds:
+        one: "less than 1 second"
+        other: "less than %{count} seconds"
+      over_x_years:
+        one: "over 1 year"
+        other: "over %{count} years"
+      x_days:
+        one: "1 day"
+        other: "%{count} days"
+      x_minutes:
+        one: "1 minute"
+        other: "%{count} minutes"
+      x_months:
+        one: "1 month"
+        other: "%{count} months"
+      x_seconds:
+        one: "1 second"
+        other: "%{count} seconds"
+      x_years:
+        one: "1 year"
+        other: "%{count} years"
+
+  # Navigation
+  nav:
+    home: "Home"
+    rooms: "Rooms"
+    admin: "Admin"
+    profile: "Profile"
+    logout: "Logout"
+    login: "Login"
+    register: "Register"
+
+  # Chat
+  chat:
+    send_message: "Send"
+    reply_to: "Reply to"
+    reply: "Reply"
+    enter_message: "Type a message..."
+    no_messages: "No messages yet. Start the conversation!"
+    no_messages_room: "No messages in this chat room yet"
+    start_conversation: "Be the first to start the conversation!"
+
+  # Admin
+  admin:
+    dashboard: "Dashboard"
+    welcome_admin: "Welcome to the administration area"
+    back_to_app: "Back to application"
+    users: "Users"
+    user_details: "User Details"
+    information_about: "Information about %{user}"
+    edit: "Edit"
+    back: "Back"
+    statistics: "Statistics"
+    total_users: "Total Users"
+    banned_users: "Banned Users"
+    admin_users: "Administrators"
+    messages: "Messages"
+    active_rooms: "Active Rooms"
+    member_since: "Member since"
+    latest_messages: "Latest Messages"
+    no_messages_written: "No messages written yet"
+    show_all_messages_from: "Show all messages from %{user}"
+    admin_actions: "Administrator Actions"
+    change_admin_status: "Change Admin Status"
+    grant_or_revoke_admin: "Grant or revoke administrator rights"
+    ban_unban_user: "Ban/Unban User"
+    ban_or_unban_desc: "Block or allow login"
+    dangerous_actions: "Dangerous Actions"
+    irreversible_actions: "These actions cannot be undone"
+    delete_user: "Delete User"
+    make_admin: "Make Administrator"
+    remove_admin: "Remove Admin Rights"
+    ban_user: "Ban User"
+    unban_user: "Unban"
+    ban_reason_placeholder: "Reason for ban..."
+    confirm_admin: "Are you sure?"
+    confirm_ban: "Ban user?"
+    confirm_unban: "Unban user?"
+    confirm_delete: "Really delete user? This cannot be undone!"
+    banned_message: "Your account has been banned. Please contact the administrator."
+
+  # User Status
+  status:
+    banned: "Banned"
+    admin: "Administrator"
+    user: "User"
+    you: "You"
+    since: "since %{date}"
+
+  # Account Information
+  account:
+    registered: "Registered"
+    updated: "Updated"
+    status: "Status"
+    reason: "Reason"
+    bio: "Bio"
+    location: "Location"
+    website: "Website"
+
+  # Forms
+  forms:
+    email: "Email"
+    password: "Password"
+    confirm_password: "Confirm Password"
+    remember_me: "Remember me"
+    forgot_password: "Forgot your password?"
+    sign_in: "Sign In"
+    sign_up: "Sign Up"
+    cancel_account: "Cancel my account"
+    update_profile: "Update Profile"
+    current_password: "Current password"
+    leave_blank: "leave blank if you don't want to change it"
+    current_password_confirm: "we need your current password to confirm your changes"
+    error_singular: "error"
+    error_plural: "errors"
+
+  # Rooms
+  rooms:
+    title: "Chat Rooms"
+    select_or_create: "Choose a chat room or create a new one"
+    available_rooms: "Available Chat Rooms"
+    room_singular: "room"
+    room_plural: "rooms"
+    participants: "participants"
+    message_singular: "message"
+    message_plural: "messages"
+    last_active: "Last active"
+    new: "New"
+    enter: "Enter"
+    no_rooms_yet: "No chat rooms available yet"
+    create_first_room: "Create the first chat room!"
+    create_new_room: "Create New Chat Room"
+    create_new: "Create New Room"
+    name: "Room Name"
+    name_placeholder: "e.g. General, Gaming, Tech..."
+    description: "Description (optional)"
+    description_placeholder: "Describe what this chat room is about..."
+    create: "Create Room"
+    create_room: "Create Chat Room"
+    join: "Join"
+    members: "Members"
+    no_rooms: "No rooms available yet"
+    create_first: "Be the first to create a room!"
+    statistics: "Statistics"
+    rooms: "Rooms"
+
+  # Language
+  language:
+    select: "Select Language"
+    german: "Deutsch"
+    english: "English"
+
+  # Home page
+  home:
+    welcome_title: "Welcome to RailsChat"
+    welcome_description: "A simple chat application for real-time communication in teams and groups."
+    register_now: "Register now"
+    already_registered: "Already registered? Sign in"
+    realtime_chat: "Real-time Chat"
+    realtime_chat_desc: "Send and receive messages in real-time with other users."
+    multiple_rooms: "Multiple Chat Rooms"
+    multiple_rooms_desc: "Create or join different chat rooms for different topics."
+    user_friendly: "User-friendly"
+    user_friendly_desc: "Simple and intuitive interface for a pleasant chat experience."

@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, controllers: {
+    registrations: "users/registrations"
+  }
   root "home#index"
+
+  # Language switching
+  patch "/set_language", to: "application#set_language", as: :set_language
 
   # Mount Action Cable server
   mount ActionCable.server => "/cable"
@@ -21,6 +26,8 @@ Rails.application.routes.draw do
     resources :users do
       member do
         patch :toggle_admin
+        patch :ban_user
+        patch :unban_user
       end
     end
   end

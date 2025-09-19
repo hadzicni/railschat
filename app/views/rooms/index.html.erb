@@ -7,7 +7,7 @@
           <h2 class="mb-2">
             RailsChat
           </h2>
-          <p class="text-muted mb-0">Wähle einen Chatraum oder erstelle einen neuen</p>
+          <p class="text-muted mb-0"><%= t('rooms.select_or_create') %></p>
         </div>
       </div>
     </div>
@@ -17,9 +17,9 @@
     <!-- Rooms List -->
     <div class="col-lg-8 mb-4">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4>Verfügbare Chaträume</h4>
+        <h4><%= t('rooms.available_rooms') %></h4>
         <span class="badge bg-secondary">
-          <%= @rooms.count %> <%= @rooms.count == 1 ? 'Raum' : 'Räume' %>
+          <%= @rooms.count %> <%= @rooms.count == 1 ? t('rooms.room_singular') : t('rooms.room_plural') %>
         </span>
       </div>
 
@@ -35,7 +35,7 @@
                   </h5>
                   <p class="card-text text-muted small">
                     <i class="bi bi-people me-1"></i>
-                    <%= room.messages.select(:user_id).distinct.count %> Teilnehmer
+                    <%= room.messages.select(:user_id).distinct.count %> <%= t('rooms.participants') %>
                   </p>
 
                   <% if room.description.present? %>
@@ -46,20 +46,20 @@
 
                                     <p class="card-text text-muted small">
                     <i class="bi bi-chat me-1"></i>
-                    <%= room.messages.count %> <%= room.messages.count == 1 ? 'Nachricht' : 'Nachrichten' %>
+                    <%= room.messages.count %> <%= room.messages.count == 1 ? t('rooms.message_singular') : t('rooms.message_plural') %>
                   </p>
                   <% if room.messages.any? %>
                     <small class="text-muted">
-                      Zuletzt aktiv: <%= time_ago_in_words(room.messages.maximum(:created_at)) %> ago
+                      <%= t('rooms.last_active') %>: <%= time_ago_in_words(room.messages.maximum(:created_at)) %> ago
                     </small>
                   <% else %>
-                    <small class="text-muted">Neu</small>
+                    <small class="text-muted"><%= t('rooms.new') %></small>
                   <% end %>
 
                   <div class="mt-3">
                     <%= link_to room_path(room), class: "btn btn-primary" do %>
                       <i class="bi bi-arrow-right me-1"></i>
-                      Betreten
+                      <%= t('rooms.enter') %>
                     <% end %>
                   </div>
                 </div>
@@ -71,8 +71,8 @@
         <div class="card">
           <div class="card-body text-center py-4">
             <i class="bi bi-chat-square-dots fs-2 text-muted mb-3"></i>
-            <h6 class="text-muted mb-2">Noch keine Chaträume vorhanden</h6>
-            <p class="text-muted small">Erstelle den ersten Chatraum!</p>
+            <h6 class="text-muted mb-2"><%= t('rooms.no_rooms_yet') %></h6>
+            <p class="text-muted small"><%= t('rooms.create_first_room') %></p>
           </div>
         </div>
       <% end %>
@@ -84,7 +84,7 @@
         <div class="card-header">
           <h6 class="mb-0">
             <i class="bi bi-plus-circle me-2"></i>
-            Neuen Chatraum erstellen
+            <%= t('rooms.create_new_room') %>
           </h6>
         </div>
         <div class="card-body">
@@ -92,7 +92,7 @@
             <% if @room.errors.any? %>
               <div class="alert alert-danger alert-sm">
                 <small>
-                  <%= @room.errors.count %> <%= @room.errors.count == 1 ? 'Fehler' : 'Fehler' %>:
+                  <%= @room.errors.count %> <%= @room.errors.count == 1 ? t('forms.error_singular') : t('forms.error_plural') %>:
                   <% @room.errors.full_messages.each do |message| %>
                     <%= message %>
                   <% end %>
@@ -101,17 +101,17 @@
             <% end %>
 
             <div class="mb-3">
-              <%= form.label :name, "Raumname", class: "form-label" %>
-              <%= form.text_field :name, class: "form-control", placeholder: "z.B. Allgemein, Gaming, Technik..." %>
+              <%= form.label :name, t('rooms.name'), class: "form-label" %>
+              <%= form.text_field :name, class: "form-control", placeholder: t('rooms.name_placeholder') %>
             </div>
 
             <div class="mb-3">
-              <%= form.label :description, "Beschreibung (optional)", class: "form-label" %>
+              <%= form.label :description, t('rooms.description'), class: "form-label" %>
               <%= form.text_area :description, class: "form-control", rows: 3,
-                  placeholder: "Beschreibe worum es in diesem Chatraum geht..." %>
+                  placeholder: t('rooms.description_placeholder') %>
             </div>
 
-            <%= form.submit "Chatraum erstellen", class: "btn btn-success" %>
+            <%= form.submit t('rooms.create_room'), class: "btn btn-success" %>
           <% end %>
         </div>
       </div>
@@ -121,7 +121,7 @@
         <div class="card-header">
           <h6 class="mb-0">
             <i class="bi bi-graph-up me-2"></i>
-            Statistiken
+            <%= t('rooms.statistics') %>
           </h6>
         </div>
         <div class="card-body">
@@ -131,14 +131,14 @@
                 <i class="bi bi-door-open text-primary fs-4"></i>
               </div>
               <h6 class="mb-0"><%= Room.count %></h6>
-              <small class="text-muted">Räume</small>
+              <small class="text-muted"><%= t('rooms.rooms') %></small>
             </div>
             <div class="col-6">
               <div class="bg-success bg-opacity-10 rounded p-2 mb-2">
                 <i class="bi bi-chat-text text-success fs-4"></i>
               </div>
               <h6 class="mb-0"><%= Message.count %></h6>
-              <small class="text-muted">Nachrichten</small>
+              <small class="text-muted"><%= t('admin.messages') %></small>
             </div>
           </div>
         </div>

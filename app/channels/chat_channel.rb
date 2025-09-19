@@ -26,6 +26,7 @@ class ChatChannel < ApplicationCable::Channel
 
     ChatChannel.broadcast_to(room, {
       message: render_message(message),
+      message_id: message.id,
       user_id: user.id,
       user_email: user.email,
       created_at: message.created_at.strftime("%H:%M")

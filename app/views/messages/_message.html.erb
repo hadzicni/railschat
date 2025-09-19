@@ -19,7 +19,14 @@
       <div class="reply-preview d-inline-block p-2 bg-light rounded-2 border-start border-primary border-3" style="max-width: 70%;">
         <div class="d-flex align-items-center gap-2 mb-1">
           <i class="bi bi-reply text-primary"></i>
-          <small class="text-muted">Antwort auf <%= message.reply_to.user.display_name %></small>
+          <small class="text-muted">
+            <%= t('chat.reply_to') %>
+            <% unless is_own_message && message.reply_to.user.id == current_user.id %>
+              <%= message.reply_to.user.display_name %>
+            <% else %>
+              <%= t('status.you') %>
+            <% end %>
+          </small>
         </div>
         <div class="reply-content text-muted small">
           <%= truncate(message.reply_to.content, length: 100) %>
@@ -56,7 +63,7 @@
                   data-message-id="<%= message.id %>"
                   data-user-name="<%= message.user.display_name %>"
                   data-content="<%= message.content %>"
-                  title="Antworten">
+                  title="<%= t('chat.reply') %>">
             <i class="bi bi-reply" style="color: rgba(255,255,255,0.7);"></i>
           </button>
         <% else %>
@@ -64,7 +71,7 @@
                   data-message-id="<%= message.id %>"
                   data-user-name="<%= message.user.display_name %>"
                   data-content="<%= message.content %>"
-                  title="Antworten">
+                  title="<%= t('chat.reply') %>">
             <i class="bi bi-reply text-muted"></i>
           </button>
         <% end %>
