@@ -25,7 +25,8 @@ class ChatChannel < ApplicationCable::Channel
     message = room.messages.create!(message_params)
 
     ChatChannel.broadcast_to(room, {
-      message: render_message(message, user),
+      message: render_message(message),
+      user_id: user.id,
       user_email: user.email,
       created_at: message.created_at.strftime("%H:%M")
     })
@@ -33,10 +34,10 @@ class ChatChannel < ApplicationCable::Channel
 
   private
 
-  def render_message(message, current_user)
+  def render_message(message)
     ApplicationController.render(
       partial: "messages/message",
-      locals: { message: message, current_user_id: current_user.id }
+      locals: { message: message, current_user_id: nil }
     )
   end
 end

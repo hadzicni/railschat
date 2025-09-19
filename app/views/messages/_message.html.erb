@@ -1,8 +1,22 @@
-<div class="message-item mb-3 p-3" id="message-<%= message.id %>" data-message-id="<%= message.id %>">
+<%
+  # Determine if this is the current user's message
+  is_own_message = false
+  begin
+    if local_assigns[:current_user_id]
+      is_own_message = message.user.id == local_assigns[:current_user_id]
+    elsif respond_to?(:current_user) && current_user
+      is_own_message = message.user.id == current_user.id
+    end
+  rescue
+    # Ignore Devise errors in WebSocket context
+  end
+%>
+
+<div class="message-wrapper mb-3 <%= 'own-message' if is_own_message %>" id="message-<%= message.id %>" data-message-id="<%= message.id %>">
   <!-- Reply indicator if this is a reply -->
   <% if message.reply? %>
-    <div class="reply-indicator mb-2">
-      <div class="reply-preview p-2 bg-light rounded-2 border-start border-primary border-3">
+    <div class="reply-indicator mb-2 <%= is_own_message ? 'text-end' : 'text-start' %>">
+      <div class="reply-preview d-inline-block p-2 bg-light rounded-2 border-start border-primary border-3" style="max-width: 70%;">
         <div class="d-flex align-items-center gap-2 mb-1">
           <i class="bi bi-reply text-primary"></i>
           <small class="text-muted">Antwort auf <%= message.reply_to.user.display_name %></small>
@@ -14,52 +28,58 @@
     </div>
   <% end %>
 
-  <div class="d-flex align-items-start">
-    <div class="profile-avatar me-3" style="width: 45px; height: 45px; font-size: 1.3rem;">
-      <%= message.user.initials %>
-    </div>
-    <div class="flex-grow-1">
-      <div class="d-flex justify-content-between align-items-center mb-1">
-        <div class="d-flex align-items-center gap-2">
+  <div class="message-bubble-container <%= is_own_message ? 'justify-content-end' : 'justify-content-start' %> d-flex">
+    <% unless is_own_message %>
+      <div class="profile-avatar me-2" style="width: 35px; height: 35px; font-size: 1rem;">
+        <%= message.user.initials %>
+      </div>
+    <% end %>
+
+    <div class="message-bubble <%= is_own_message ? 'own-bubble' : 'other-bubble' %>" style="max-width: 70%;">
+      <% unless is_own_message %>
+        <div class="message-header mb-1">
           <%= link_to user_path(message.user), class: "text-decoration-none" do %>
-            <h6 class="mb-0 text-primary fw-bold">
+            <span class="username fw-bold">
               <%= message.user.display_name %>
-            </h6>
-          <% end %>
-          <%
-            user_id = nil
-            begin
-              if local_assigns[:current_user_id]
-                user_id = local_assigns[:current_user_id]
-              elsif respond_to?(:current_user) && current_user
-                user_id = current_user.id
-              end
-            rescue
-              # Ignore Devise errors in WebSocket context
-            end
-          %>
-          <% if user_id && message.user.id == user_id %>
-            <span class="badge bg-primary bg-opacity-10 text-primary">Du</span>
+            </span>
           <% end %>
         </div>
-        <div class="d-flex align-items-center gap-2">
-          <small class="text-muted d-flex align-items-center">
-            <i class="bi bi-clock me-1"></i>
-            <%= message.created_at.strftime('%H:%M') %>
-          </small>
-          <!-- Reply button -->
-          <button class="btn btn-sm btn-outline-secondary reply-btn"
+      <% end %>
+
+      <div class="message-content mb-1">
+        <%= simple_format(message.content, {}, wrapper_tag: "div") %>
+      </div>
+
+      <div class="message-footer d-flex <%= is_own_message ? 'justify-content-between' : 'justify-content-end' %> align-items-center">
+        <% if is_own_message %>
+          <button class="btn btn-sm reply-btn"
                   data-message-id="<%= message.id %>"
                   data-user-name="<%= message.user.display_name %>"
                   data-content="<%= message.content %>"
                   title="Antworten">
-            <i class="bi bi-reply"></i>
+            <i class="bi bi-reply" style="color: rgba(255,255,255,0.7);"></i>
           </button>
-        </div>
-      </div>
-      <div class="message-content">
-        <%= simple_format(message.content, {}, wrapper_tag: "div") %>
+        <% else %>
+          <button class="btn btn-sm reply-btn me-2"
+                  data-message-id="<%= message.id %>"
+                  data-user-name="<%= message.user.display_name %>"
+                  data-content="<%= message.content %>"
+                  title="Antworten">
+            <i class="bi bi-reply text-muted"></i>
+          </button>
+        <% end %>
+
+        <small class="timestamp <%= is_own_message ? 'text-light' : 'text-muted' %>">
+          <i class="bi bi-clock me-1"></i>
+          <%= message.created_at.strftime('%H:%M') %>
+        </small>
       </div>
     </div>
+
+    <% if is_own_message %>
+      <div class="profile-avatar ms-2" style="width: 35px; height: 35px; font-size: 1rem;">
+        <%= message.user.initials %>
+      </div>
+    <% end %>
   </div>
 </div>

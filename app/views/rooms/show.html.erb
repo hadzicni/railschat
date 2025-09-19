@@ -46,10 +46,10 @@
 
         <div class="card-body p-0 d-flex flex-column" style="height: calc(100% - 60px);">
           <!-- Messages Container -->
-          <div class="flex-grow-1 chat-container p-3 overflow-auto" id="messages-container" style="height: calc(100% - 80px);">
+          <div class="flex-grow-1 chat-container p-2 overflow-auto" id="messages-container" style="height: calc(100% - 80px); background-color: #f7f7f7;">
             <% if @messages.any? %>
               <% @messages.each do |message| %>
-                <%= render 'messages/message', message: message %>
+                <%= render 'messages/message', message: message, current_user_id: current_user.id %>
               <% end %>
             <% else %>
               <div class="text-center text-muted py-5" id="no-messages">
@@ -93,9 +93,10 @@
                     style: "resize: none; box-shadow: none; max-height: 60px;" %>
               </div>
               <div class="align-self-end">
-                <%= form.submit class: "btn btn-primary px-3 py-2", id: "send-button" do %>
+                <button type="submit" class="btn btn-primary px-4 py-2 d-flex align-items-center gap-2 modern-send-btn" id="send-button">
                   <i class="bi bi-send-fill"></i>
-                <% end %>
+                  <span>Senden</span>
+                </button>
               </div>
             <% end %>
 
@@ -184,11 +185,227 @@
   </div>
 </div>
 
+<style>
+  /* Chat Container Background */
+  .chat-container {
+    background: linear-gradient(to bottom, #f7f7f7, #e8e8e8) !important;
+  }
+
+  /* WhatsApp-Style Message Bubbles */
+  .message-wrapper {
+    padding: 4px 15px 8px 15px;
+    clear: both;
+  }
+
+  .message-bubble {
+    padding: 10px 14px;
+    border-radius: 18px;
+    word-wrap: break-word;
+    position: relative;
+    margin-bottom: 2px;
+    max-width: 85%;
+    display: inline-block;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  }
+
+  .own-bubble {
+    background: linear-gradient(135deg, #25D366, #20b358);
+    color: white;
+    border-bottom-right-radius: 4px;
+    float: right;
+    clear: both;
+  }
+
+  .other-bubble {
+    background: white;
+    color: #333;
+    border-bottom-left-radius: 4px;
+    float: left;
+    clear: both;
+    border: 1px solid #e0e0e0;
+  }
+
+  .message-bubble-container {
+    width: 100%;
+    display: block;
+    overflow: hidden;
+  }
+
+  .message-bubble-container.justify-content-end {
+    text-align: right;
+  }
+
+  .message-bubble-container.justify-content-start {
+    text-align: left;
+  }
+
+  .message-content {
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 4px;
+  }
+
+  .message-content p {
+    margin: 0;
+  }
+
+  .message-footer {
+    font-size: 11px;
+    margin-top: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .timestamp {
+    opacity: 0.7;
+    font-size: 11px;
+  }
+
+  .username {
+    font-size: 12px;
+    color: #25D366;
+    font-weight: 600;
+    margin-bottom: 2px;
+    display: block;
+  }
+
+  .reply-btn {
+    border: none !important;
+    background: none !important;
+    padding: 2px 4px !important;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+    font-size: 11px;
+  }
+
+  .reply-btn:hover {
+    opacity: 1 !important;
+    background: rgba(0,0,0,0.1) !important;
+    border-radius: 50% !important;
+  }
+
+  .own-bubble .reply-btn:hover {
+    background: rgba(255,255,255,0.2) !important;
+  }
+
+  .own-bubble .reply-btn i {
+    color: rgba(255,255,255,0.8);
+  }
+
+  .other-bubble .reply-btn i {
+    color: rgba(0,0,0,0.5);
+  }
+
+  /* Profile avatars for WhatsApp style */
+  .profile-avatar {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+    margin-top: 2px;
+  }
+
+  .own-message .profile-avatar {
+    float: right;
+    margin-left: 8px;
+    margin-right: 0;
+  }
+
+  .other-message .profile-avatar {
+    float: left;
+    margin-right: 8px;
+    margin-left: 0;
+  }
+
+  /* Reply preview styling */
+  .reply-indicator {
+    margin: 0 15px 6px 15px;
+    text-align: left;
+  }
+
+  .own-message .reply-indicator {
+    text-align: right;
+  }
+
+  .reply-preview {
+    background: rgba(37, 211, 102, 0.1) !important;
+    border-left: 3px solid #25D366 !important;
+    display: inline-block;
+    max-width: 70%;
+  }
+
+  /* Modern Send Button */
+  .modern-send-btn {
+    background: linear-gradient(45deg, #0d6efd, #6610f2) !important;
+    border: none !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3) !important;
+    font-weight: 500 !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+
+  .modern-send-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4) !important;
+    background: linear-gradient(45deg, #0b5ed7, #520dc2) !important;
+  }
+
+  .modern-send-btn:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 2px 10px rgba(13, 110, 253, 0.3) !important;
+  }
+
+  .modern-send-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .modern-send-btn:hover::before {
+    left: 100%;
+  }
+
+  .modern-send-btn i {
+    font-size: 1.1em;
+    transition: transform 0.3s ease;
+  }
+
+  .modern-send-btn:hover i {
+    transform: translateX(2px);
+  }
+
+  .modern-send-btn:disabled {
+    background: #6c757d !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .modern-send-btn:disabled::before {
+    display: none;
+  }
+</style>
+
 <script type="module">
   import { createConsumer } from "@rails/actioncable";
 
   document.addEventListener('DOMContentLoaded', function() {
     const roomId = <%= @room.id %>;
+    const currentUserId = <%= current_user.id %>;
     let consumer, subscription;
     let replyToId = null;
 
@@ -250,7 +467,60 @@
       }
 
       if (container) {
-        container.insertAdjacentHTML('beforeend', data.message);
+        // Create a temporary div to parse the HTML
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = data.message;
+
+        // Get the message wrapper
+        const messageWrapper = tempDiv.querySelector('.message-wrapper');
+
+        // Check if this message is from the current user
+        console.log('🔍 Checking message ownership: data.user_id =', data.user_id, 'currentUserId =', currentUserId);
+
+        if (data.user_id && data.user_id === currentUserId) {
+          console.log('✅ This is my message - styling as own message');
+          if (messageWrapper && !messageWrapper.classList.contains('own-message')) {
+            messageWrapper.classList.add('own-message');
+            messageWrapper.classList.remove('other-message');
+          }
+
+          // Update bubble classes
+          const bubble = tempDiv.querySelector('.message-bubble');
+          if (bubble) {
+            bubble.classList.remove('other-bubble');
+            bubble.classList.add('own-bubble');
+          }
+
+          // Update button container positioning
+          const bubbleContainer = tempDiv.querySelector('.message-bubble-container');
+          if (bubbleContainer) {
+            bubbleContainer.classList.remove('justify-content-start');
+            bubbleContainer.classList.add('justify-content-end');
+          }
+        } else {
+          console.log('👥 This is someone else\'s message - styling as other message');
+          // Ensure it's marked as other message
+          if (messageWrapper && !messageWrapper.classList.contains('other-message')) {
+            messageWrapper.classList.add('other-message');
+            messageWrapper.classList.remove('own-message');
+          }
+
+          // Update bubble classes
+          const bubble = tempDiv.querySelector('.message-bubble');
+          if (bubble) {
+            bubble.classList.remove('own-bubble');
+            bubble.classList.add('other-bubble');
+          }
+
+          // Update button container positioning
+          const bubbleContainer = tempDiv.querySelector('.message-bubble-container');
+          if (bubbleContainer) {
+            bubbleContainer.classList.remove('justify-content-end');
+            bubbleContainer.classList.add('justify-content-start');
+          }
+        }
+
+        container.insertAdjacentHTML('beforeend', tempDiv.innerHTML);
 
         // Attach event listeners to new reply buttons
         attachReplyEventListeners();
