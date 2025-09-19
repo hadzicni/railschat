@@ -62,10 +62,27 @@
 
           <!-- Message Input -->
           <div class="border-top p-3" style="min-height: 80px;">
+            <!-- Reply Preview -->
+            <div id="reply-preview" class="reply-preview-container mb-2" style="display: none;">
+              <div class="d-flex align-items-center justify-content-between p-2 bg-light rounded-2 border-start border-primary border-3">
+                <div class="flex-grow-1">
+                  <div class="d-flex align-items-center gap-2 mb-1">
+                    <i class="bi bi-reply text-primary"></i>
+                    <small class="text-muted">Antwort auf <span id="reply-user-name"></span></small>
+                  </div>
+                  <div class="reply-content text-muted small" id="reply-content-preview"></div>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-secondary" id="cancel-reply">
+                  <i class="bi bi-x"></i>
+                </button>
+              </div>
+            </div>
+
             <%= form_with model: [@room, @message],
                 local: false,
                 id: "message-form",
                 class: "d-flex gap-2" do |form| %>
+              <%= form.hidden_field :reply_to_id, id: "reply-to-id" %>
               <div class="flex-grow-1">
                 <%= form.text_area :content,
                     placeholder: "Schreibe eine Nachricht...",
@@ -173,6 +190,7 @@
   document.addEventListener('DOMContentLoaded', function() {
     const roomId = <%= @room.id %>;
     let consumer, subscription;
+    let replyToId = null;
 
     console.log('🔧 Initializing WebSocket for room:', roomId);
 
@@ -234,11 +252,72 @@
       if (container) {
         container.insertAdjacentHTML('beforeend', data.message);
 
+        // Attach event listeners to new reply buttons
+        attachReplyEventListeners();
+
         // Auto-scroll to bottom
         setTimeout(function() {
           container.scrollTop = container.scrollHeight;
         }, 50);
       }
+    }
+
+    // Show reply preview
+    function showReplyPreview(messageId, userName, content) {
+      replyToId = messageId;
+      const replyPreview = document.getElementById('reply-preview');
+      const replyUserName = document.getElementById('reply-user-name');
+      const replyContentPreview = document.getElementById('reply-content-preview');
+      const replyToIdField = document.getElementById('reply-to-id');
+      const messageInput = document.getElementById('message-input');
+
+      if (replyPreview && replyUserName && replyContentPreview && replyToIdField) {
+        replyUserName.textContent = userName;
+        replyContentPreview.textContent = content.length > 100 ? content.substring(0, 100) + '...' : content;
+        replyToIdField.value = messageId;
+        replyPreview.style.display = 'block';
+
+        // Focus message input
+        if (messageInput) {
+          messageInput.focus();
+        }
+      }
+    }
+
+    // Hide reply preview
+    function hideReplyPreview() {
+      replyToId = null;
+      const replyPreview = document.getElementById('reply-preview');
+      const replyToIdField = document.getElementById('reply-to-id');
+
+      if (replyPreview) {
+        replyPreview.style.display = 'none';
+      }
+      if (replyToIdField) {
+        replyToIdField.value = '';
+      }
+    }
+
+    // Attach event listeners to reply buttons
+    function attachReplyEventListeners() {
+      const replyButtons = document.querySelectorAll('.reply-btn');
+      replyButtons.forEach(button => {
+        if (!button.hasAttribute('data-listener-attached')) {
+          button.addEventListener('click', function() {
+            const messageId = this.getAttribute('data-message-id');
+            const userName = this.getAttribute('data-user-name');
+            const content = this.getAttribute('data-content');
+            showReplyPreview(messageId, userName, content);
+          });
+          button.setAttribute('data-listener-attached', 'true');
+        }
+      });
+    }
+
+    // Cancel reply
+    const cancelReplyBtn = document.getElementById('cancel-reply');
+    if (cancelReplyBtn) {
+      cancelReplyBtn.addEventListener('click', hideReplyPreview);
     }
 
     // Override form submission to use WebSocket
@@ -256,10 +335,19 @@
         }
 
         if (subscription && typeof subscription.perform === 'function') {
+          // Prepare message data
+          const messageData = { content: content };
+          if (replyToId) {
+            messageData.reply_to_id = replyToId;
+          }
+
           // Send via WebSocket
-          console.log('🚀 Sending via WebSocket:', content);
-          subscription.perform('send_message', { content: content });
+          console.log('🚀 Sending via WebSocket:', messageData);
+          subscription.perform('send_message', messageData);
           messageInput.value = '';
+
+          // Hide reply preview after sending
+          hideReplyPreview();
         } else {
           // Fallback: submit form normally
           console.log('⚠️ No WebSocket connection, submitting form normally');
@@ -284,6 +372,9 @@
     if (container) {
       container.scrollTop = container.scrollHeight;
     }
+
+    // Attach event listeners to existing reply buttons
+    attachReplyEventListeners();
 
     // Initialize WebSocket
     initializeWebSocket();

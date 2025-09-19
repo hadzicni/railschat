@@ -1,0 +1,48 @@
+<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
+  <div class="row w-100 justify-content-center">
+    <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <div class="text-center mb-4">
+            <h2 class="fw-bold text-dark mb-1">Anmelden</h2>
+            <p class="text-muted">Melde dich in deinem Konto an</p>
+          </div>
+
+          <%= form_for(resource, as: resource_name, url: session_path(resource_name), local: true) do |f| %>
+            <div class="mb-3">
+              <%= f.label :email, "E-Mail-Adresse", class: "form-label" %>
+              <%= f.email_field :email,
+                  autofocus: true,
+                  autocomplete: "email",
+                  class: "form-control",
+                  placeholder: "deine@email.com" %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :password, "Passwort", class: "form-label" %>
+              <%= f.password_field :password,
+                  autocomplete: "current-password",
+                  class: "form-control",
+                  placeholder: "••••••••" %>
+            </div>
+
+            <% if devise_mapping.rememberable? %>
+              <div class="form-check mb-3">
+                <%= f.check_box :remember_me, class: "form-check-input" %>
+                <%= f.label :remember_me, "Angemeldet bleiben", class: "form-check-label" %>
+              </div>
+            <% end %>
+
+            <div class="d-grid mb-3">
+              <%= f.submit "Anmelden", class: "btn btn-primary" %>
+            </div>
+          <% end %>
+
+          <div class="text-center">
+            <%= render "devise/shared/links" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

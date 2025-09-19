@@ -1,0 +1,146 @@
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-1">Benutzerverwaltung</h1>
+      <p class="text-muted">Verwalte alle registrierten Benutzer</p>
+    </div>
+    <div>
+      <%= link_to "Dashboard", admin_dashboard_index_path, class: "btn btn-outline-secondary me-2" %>
+      <%= link_to "Zurück zur App", root_path, class: "btn btn-outline-primary" %>
+    </div>
+  </div>
+
+  <!-- Statistics -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card bg-light">
+        <div class="card-body text-center">
+          <h3 class="text-primary"><%= @total_users %></h3>
+          <p class="mb-0">Gesamt Benutzer</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card bg-light">
+        <div class="card-body text-center">
+          <h3 class="text-success"><%= @admin_users %></h3>
+          <p class="mb-0">Administratoren</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card bg-light">
+        <div class="card-body text-center">
+          <h3 class="text-info"><%= @regular_users %></h3>
+          <p class="mb-0">Normale Benutzer</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Users Table -->
+  <div class="card">
+    <div class="card-header">
+      <h5 class="mb-0">Alle Benutzer</h5>
+    </div>
+    <div class="card-body">
+      <% if @users.any? %>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Benutzer</th>
+                <th>E-Mail</th>
+                <th>Status</th>
+                <th>Nachrichten</th>
+                <th>Registriert</th>
+                <th>Aktionen</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @users.each do |user| %>
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="profile-avatar me-3" style="width: 40px; height: 40px; font-size: 1rem;">
+                        <%= user.initials %>
+                      </div>
+                      <div>
+                        <h6 class="mb-0"><%= user.display_name %></h6>
+                        <% if user.first_name.present? || user.last_name.present? %>
+                          <small class="text-muted"><%= user.full_name %></small>
+                        <% end %>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <%= user.email %>
+                    <% if user == current_user %>
+                      <span class="badge bg-primary ms-2">Du</span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <% if user.admin? %>
+                      <span class="badge bg-success">Administrator</span>
+                    <% else %>
+                      <span class="badge bg-secondary">Benutzer</span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <span class="badge bg-info"><%= user.messages.count %></span>
+                  </td>
+                  <td>
+                    <small class="text-muted">
+                      <%= user.created_at.strftime('%d.%m.%Y') %>
+                    </small>
+                  </td>
+                  <td>
+                    <div class="btn-group" role="group">
+                      <%= link_to admin_user_path(user), class: "btn btn-sm btn-outline-primary", title: "Anzeigen" do %>
+                        <i class="bi bi-eye"></i>
+                      <% end %>
+
+                      <%= link_to edit_admin_user_path(user), class: "btn btn-sm btn-outline-secondary", title: "Bearbeiten" do %>
+                        <i class="bi bi-pencil"></i>
+                      <% end %>
+
+                      <% if user != current_user %>
+                        <%= form_with url: toggle_admin_admin_user_path(user), method: :patch, local: true, class: "d-inline" do |form| %>
+                          <button type="submit" 
+                                  class="btn btn-sm <%= user.admin? ? 'btn-warning' : 'btn-success' %>"
+                                  title="<%= user.admin? ? 'Admin entfernen' : 'Zum Admin machen' %>"
+                                  onclick="return confirm('Bist du sicher?')">
+                            <i class="bi bi-shield<%= user.admin? ? '-x' : '-check' %>"></i>
+                          </button>
+                        <% end %>
+
+                        <%= form_with url: admin_user_path(user), method: :delete, local: true, class: "d-inline" do |form| %>
+                          <button type="submit"
+                                  class="btn btn-sm btn-outline-danger"
+                                  title="Löschen"
+                                  onclick="return confirm('Bist du sicher? Diese Aktion kann nicht rückgängig gemacht werden!')">
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        <% end %>
+                      <% else %>
+                        <span class="btn btn-sm btn-light disabled" title="Eigenes Konto">
+                          <i class="bi bi-lock"></i>
+                        </span>
+                      <% end %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <div class="text-center py-5">
+          <i class="bi bi-people display-1 text-muted"></i>
+          <h4 class="mt-3">Keine Benutzer gefunden</h4>
+          <p class="text-muted">Es sind noch keine Benutzer registriert.</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

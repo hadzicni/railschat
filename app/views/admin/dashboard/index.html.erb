@@ -1,0 +1,171 @@
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-1">Admin Dashboard</h1>
+      <p class="text-muted">Willkommen im Administrationsbereich</p>
+    </div>
+    <div>
+      <%= link_to "Zurück zur Anwendung", root_path, class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card text-white bg-primary">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h5 class="card-title">Benutzer</h5>
+              <h2 class="mb-0"><%= @total_users %></h2>
+            </div>
+            <div class="align-self-center">
+              <i class="bi bi-people fs-1"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-success">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h5 class="card-title">Administratoren</h5>
+              <h2 class="mb-0"><%= @admin_users %></h2>
+            </div>
+            <div class="align-self-center">
+              <i class="bi bi-shield-check fs-1"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-info">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h5 class="card-title">Chaträume</h5>
+              <h2 class="mb-0"><%= @total_rooms %></h2>
+            </div>
+            <div class="align-self-center">
+              <i class="bi bi-chat-square fs-1"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-warning">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h5 class="card-title">Nachrichten</h5>
+              <h2 class="mb-0"><%= @total_messages %></h2>
+            </div>
+            <div class="align-self-center">
+              <i class="bi bi-chat-dots fs-1"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Schnellaktionen</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <%= link_to admin_users_path, class: "btn btn-outline-primary w-100 mb-2" do %>
+                <i class="bi bi-people me-2"></i>Benutzerverwaltung
+              <% end %>
+            </div>
+            <div class="col-md-4">
+              <%= link_to rooms_path, class: "btn btn-outline-info w-100 mb-2" do %>
+                <i class="bi bi-chat-square me-2"></i>Chaträume anzeigen
+              <% end %>
+            </div>
+            <div class="col-md-4">
+              <%= link_to root_path, class: "btn btn-outline-success w-100 mb-2" do %>
+                <i class="bi bi-house me-2"></i>Zur Hauptanwendung
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Recent Users -->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Neueste Benutzer</h5>
+        </div>
+        <div class="card-body">
+          <% if @recent_users.any? %>
+            <% @recent_users.each do |user| %>
+              <div class="d-flex align-items-center mb-3">
+                <div class="profile-avatar me-3" style="width: 40px; height: 40px; font-size: 1rem;">
+                  <%= user.initials %>
+                </div>
+                <div class="flex-grow-1">
+                  <h6 class="mb-0"><%= user.display_name %></h6>
+                  <small class="text-muted"><%= user.email %></small>
+                  <% if user.admin? %>
+                    <span class="badge bg-primary ms-2">Admin</span>
+                  <% end %>
+                </div>
+                <small class="text-muted">
+                  <%= time_ago_in_words(user.created_at) %> her
+                </small>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-muted">Keine Benutzer vorhanden.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Messages -->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Neueste Nachrichten</h5>
+        </div>
+        <div class="card-body">
+          <% if @recent_messages.any? %>
+            <% @recent_messages.each do |message| %>
+              <div class="mb-3">
+                <div class="d-flex align-items-start">
+                  <div class="profile-avatar me-2" style="width: 30px; height: 30px; font-size: 0.8rem;">
+                    <%= message.user.initials %>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between">
+                      <strong><%= message.user.display_name %></strong>
+                      <small class="text-muted"><%= time_ago_in_words(message.created_at) %> her</small>
+                    </div>
+                    <small class="text-muted">in <%= message.room.name %></small>
+                    <p class="mb-0 small"><%= truncate(message.content, length: 50) %></p>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-muted">Keine Nachrichten vorhanden.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

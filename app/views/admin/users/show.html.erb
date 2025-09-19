@@ -1,0 +1,174 @@
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-1">Benutzer Details</h1>
+      <p class="text-muted">Informationen über <%= @user.display_name %></p>
+    </div>
+    <div>
+      <%= link_to "Bearbeiten", edit_admin_user_path(@user), class: "btn btn-primary me-2" %>
+      <%= link_to "Zurück", admin_users_path, class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- User Information -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body text-center">
+          <div class="profile-avatar mx-auto mb-3" style="width: 80px; height: 80px; font-size: 2rem;">
+            <%= @user.initials %>
+          </div>
+          <h4><%= @user.display_name %></h4>
+          <p class="text-muted"><%= @user.email %></p>
+
+          <% if @user.admin? %>
+            <span class="badge bg-success fs-6">Administrator</span>
+          <% else %>
+            <span class="badge bg-secondary fs-6">Benutzer</span>
+          <% end %>
+
+          <% if @user == current_user %>
+            <span class="badge bg-primary fs-6 ms-2">Du</span>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="card mt-3">
+        <div class="card-header">
+          <h6 class="mb-0">Kontoinformationen</h6>
+        </div>
+        <div class="card-body">
+          <div class="row mb-2">
+            <div class="col-sm-5"><strong>Registriert:</strong></div>
+            <div class="col-sm-7"><%= @user.created_at.strftime('%d.%m.%Y um %H:%M') %></div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-sm-5"><strong>Aktualisiert:</strong></div>
+            <div class="col-sm-7"><%= @user.updated_at.strftime('%d.%m.%Y um %H:%M') %></div>
+          </div>
+          <% if @user.bio.present? %>
+            <div class="row mb-2">
+              <div class="col-sm-5"><strong>Bio:</strong></div>
+              <div class="col-sm-7"><%= simple_format(@user.bio) %></div>
+            </div>
+          <% end %>
+          <% if @user.location.present? %>
+            <div class="row mb-2">
+              <div class="col-sm-5"><strong>Ort:</strong></div>
+              <div class="col-sm-7"><%= @user.location %></div>
+            </div>
+          <% end %>
+          <% if @user.website.present? %>
+            <div class="row mb-2">
+              <div class="col-sm-5"><strong>Website:</strong></div>
+              <div class="col-sm-7">
+                <%= link_to @user.website, @user.website, target: "_blank", class: "text-decoration-none" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity Information -->
+    <div class="col-md-8">
+      <!-- Statistics -->
+      <div class="row mb-4">
+        <div class="col-md-4">
+          <div class="card bg-primary text-white">
+            <div class="card-body text-center">
+              <h3><%= @user.messages.count %></h3>
+              <p class="mb-0">Nachrichten</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card bg-info text-white">
+            <div class="card-body text-center">
+              <h3><%= @user_rooms.count %></h3>
+              <p class="mb-0">Aktive Räume</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card bg-success text-white">
+            <div class="card-body text-center">
+              <h3><%= time_ago_in_words(@user.created_at) %></h3>
+              <p class="mb-0">Mitglied seit</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Messages -->
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0">Neueste Nachrichten</h6>
+        </div>
+        <div class="card-body">
+          <% if @user_messages.any? %>
+            <% @user_messages.each do |message| %>
+              <div class="border-bottom pb-3 mb-3">
+                <div class="d-flex justify-content-between align-items-start">
+                  <div class="flex-grow-1">
+                    <div class="d-flex align-items-center mb-2">
+                      <strong class="me-2">in <%= link_to message.room.name, room_path(message.room), class: "text-decoration-none" %></strong>
+                      <small class="text-muted">
+                        <%= message.created_at.strftime('%d.%m.%Y um %H:%M') %>
+                      </small>
+                    </div>
+                    <p class="mb-0"><%= simple_format(message.content) %></p>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+            <div class="text-center">
+              <%= link_to "Alle Nachrichten von #{@user.display_name} anzeigen", "#", class: "btn btn-outline-primary btn-sm" %>
+            </div>
+          <% else %>
+            <div class="text-center py-4">
+              <i class="bi bi-chat-dots display-4 text-muted"></i>
+              <p class="text-muted mt-2">Noch keine Nachrichten geschrieben</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Actions -->
+  <% if @user != current_user %>
+    <div class="card mt-4 border-danger">
+      <div class="card-header bg-danger text-white">
+        <h6 class="mb-0">Administratoraktionen</h6>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <h6>Admin-Status ändern</h6>
+            <p class="text-muted small">Gewähre oder entziehe Administrator-Rechte</p>
+            <%= form_with url: toggle_admin_admin_user_path(@user), method: :patch, local: true do |form| %>
+              <button type="submit" 
+                      class="btn <%= @user.admin? ? 'btn-warning' : 'btn-success' %>"
+                      onclick="return confirm('Bist du sicher?')">
+                <i class="bi bi-shield<%= @user.admin? ? '-x' : '-check' %> me-2"></i>
+                <%= @user.admin? ? 'Admin-Rechte entfernen' : 'Zum Administrator machen' %>
+              </button>
+            <% end %>
+          </div>
+          <div class="col-md-6">
+            <h6>Benutzer löschen</h6>
+            <p class="text-muted small">Lösche den Benutzer permanent (kann nicht rückgängig gemacht werden)</p>
+            <%= form_with url: admin_user_path(@user), method: :delete, local: true do |form| %>
+              <button type="submit"
+                      class="btn btn-danger"
+                      onclick="return confirm('Bist du sicher? Diese Aktion kann nicht rückgängig gemacht werden!')">
+                <i class="bi bi-trash me-2"></i>Benutzer löschen
+              </button>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

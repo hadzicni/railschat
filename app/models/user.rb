@@ -7,6 +7,10 @@ class User < ApplicationRecord
   has_many :messages, dependent: :destroy
   validates :email, presence: true, uniqueness: true
 
+  # Admin scopes
+  scope :admins, -> { where(admin: true) }
+  scope :regular_users, -> { where(admin: false) }
+
   # Display name method
   def display_name
     if first_name.present? && last_name.present?
@@ -34,5 +38,26 @@ class User < ApplicationRecord
     else
       email
     end
+  end
+
+  # Admin methods
+  def admin?
+    admin == true
+  end
+
+  def make_admin!
+    update!(admin: true)
+  end
+
+  def remove_admin!
+    update!(admin: false)
+  end
+
+  def can_be_deleted_by?(current_user)
+    current_user.admin? && current_user != self
+  end
+
+  def status
+    admin? ? "Administrator" : "Benutzer"
   end
 end

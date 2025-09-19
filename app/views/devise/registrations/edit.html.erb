@@ -1,0 +1,83 @@
+<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
+  <div class="row w-100 justify-content-center">
+    <div class="col-12 col-sm-8 col-md-6 col-lg-5">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <div class="text-center mb-4">
+            <h2 class="fw-bold text-dark mb-1">Profil bearbeiten</h2>
+            <p class="text-muted">Aktualisiere deine Kontodaten</p>
+          </div>
+
+          <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }, local: true) do |f| %>
+            <%= render "devise/shared/error_messages", resource: resource %>
+
+            <div class="mb-3">
+              <%= f.label :email, "E-Mail-Adresse", class: "form-label" %>
+              <%= f.email_field :email,
+                  autofocus: true,
+                  autocomplete: "email",
+                  class: "form-control" %>
+            </div>
+
+            <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+              <div class="alert alert-info">
+                Warten auf Bestätigung für: <%= resource.unconfirmed_email %>
+              </div>
+            <% end %>
+
+            <div class="mb-3">
+              <%= f.label :password, "Neues Passwort", class: "form-label" %>
+              <small class="text-muted d-block">(Leer lassen, wenn du es nicht ändern möchtest)</small>
+              <%= f.password_field :password,
+                  autocomplete: "new-password",
+                  class: "form-control",
+                  placeholder: "••••••••" %>
+              <% if @minimum_password_length %>
+                <small class="text-muted"><%= @minimum_password_length %> Zeichen mindestens</small>
+              <% end %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :password_confirmation, "Passwort bestätigen", class: "form-label" %>
+              <%= f.password_field :password_confirmation,
+                  autocomplete: "new-password",
+                  class: "form-control",
+                  placeholder: "••••••••" %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :current_password, "Aktuelles Passwort", class: "form-label" %>
+              <small class="text-muted d-block">(Zur Bestätigung der Änderungen erforderlich)</small>
+              <%= f.password_field :current_password,
+                  autocomplete: "current-password",
+                  class: "form-control",
+                  placeholder: "••••••••" %>
+            </div>
+
+            <div class="d-grid mb-3">
+              <%= f.submit "Aktualisieren", class: "btn btn-primary" %>
+            </div>
+          <% end %>
+
+          <hr>
+
+          <div class="text-center">
+            <h6 class="text-danger mb-2">Gefährliche Zone</h6>
+            <p class="text-muted small mb-3">Diese Aktion kann nicht rückgängig gemacht werden</p>
+            <%= button_to "Konto löschen", registration_path(resource_name),
+                data: {
+                  confirm: "Bist du sicher? Diese Aktion kann nicht rückgängig gemacht werden!",
+                  turbo_confirm: "Bist du sicher? Diese Aktion kann nicht rückgängig gemacht werden!"
+                },
+                method: :delete,
+                class: "btn btn-outline-danger btn-sm" %>
+          </div>
+
+          <div class="text-center mt-3">
+            <%= link_to "Zurück", :back, class: "text-decoration-none text-muted" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

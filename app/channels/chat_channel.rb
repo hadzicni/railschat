@@ -12,10 +12,17 @@ class ChatChannel < ApplicationCable::Channel
     room = Room.find(params[:room_id])
     user = current_user
 
-    message = room.messages.create!(
+    message_params = {
       content: data["content"],
       user: user
-    )
+    }
+
+    # Add reply_to if provided
+    if data["reply_to_id"].present?
+      message_params[:reply_to_id] = data["reply_to_id"]
+    end
+
+    message = room.messages.create!(message_params)
 
     ChatChannel.broadcast_to(room, {
       message: render_message(message, user),
