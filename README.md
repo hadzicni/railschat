@@ -156,9 +156,9 @@ User }o--o{ Room : participates_in (via messages)
 
 ## Development
 
-**Nikola Hadzic**  
-September 19, 2025  
-ICT Module 223 – Multi-user Application  
+**Nikola Hadzic**
+September 19, 2025
+ICT Module 223 – Multi-user Application
 Class: 23-223-E
 
 ## License
