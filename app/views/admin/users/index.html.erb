@@ -95,7 +95,7 @@
                   <td>
                     <% user.roles.each do |role| %>
                       <span class="badge me-1" style="background-color: <%= role.color %>; color: white;">
-                        <%= role.name %>
+                        <%= role.name.humanize %>
                       </span>
                     <% end %>
                   </td>
