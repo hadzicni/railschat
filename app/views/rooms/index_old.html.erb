@@ -1,0 +1,62 @@
+<div class="row">
+  <div class="col-md-8">
+    <h2>Chaträume</h2>
+    
+    <% if @rooms.any? %>
+      <div class="row">
+        <% @rooms.each do |room| %>
+          <div class="col-md-6 mb-3">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><%= room.name %></h5>
+                <p class="card-text">
+                  <%= truncate(room.description, length: 100) if room.description.present? %>
+                </p>
+                <%= link_to "Chatraum betreten", room, class: "btn btn-primary" %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="alert alert-info">
+        Noch keine Chaträume vorhanden. Erstelle den ersten Chatraum!
+      </div>
+    <% end %>
+  </div>
+  
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
+        <h5>Neuen Chatraum erstellen</h5>
+      </div>
+      <div class="card-body">
+        <%= form_with model: @room, local: true do |form| %>
+          <% if @room.errors.any? %>
+            <div class="alert alert-danger">
+              <ul class="mb-0">
+                <% @room.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <div class="mb-3">
+            <%= form.label :name, "Name", class: "form-label" %>
+            <%= form.text_field :name, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :description, "Beschreibung (optional)", class: "form-label" %>
+            <%= form.text_area :description, rows: 3, class: "form-control" %>
+          </div>
+
+          <div class="d-grid">
+            <%= form.submit "Chatraum erstellen", class: "btn btn-success" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

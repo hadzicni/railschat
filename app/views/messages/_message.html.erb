@@ -1,0 +1,40 @@
+<div class="message-item mb-3 p-3" id="message-<%= message.id %>">
+  <div class="d-flex align-items-start">
+    <div class="profile-avatar me-3" style="width: 45px; height: 45px; font-size: 1.3rem;">
+      <%= message.user.initials %>
+    </div>
+    <div class="flex-grow-1">
+      <div class="d-flex justify-content-between align-items-center mb-1">
+        <div class="d-flex align-items-center gap-2">
+          <%= link_to user_path(message.user), class: "text-decoration-none" do %>
+            <h6 class="mb-0 text-primary fw-bold">
+              <%= message.user.display_name %>
+            </h6>
+          <% end %>
+          <%
+            user_id = nil
+            begin
+              if local_assigns[:current_user_id]
+                user_id = local_assigns[:current_user_id]
+              elsif respond_to?(:current_user) && current_user
+                user_id = current_user.id
+              end
+            rescue
+              # Ignore Devise errors in WebSocket context
+            end
+          %>
+          <% if user_id && message.user.id == user_id %>
+            <span class="badge bg-primary bg-opacity-10 text-primary">Du</span>
+          <% end %>
+        </div>
+        <small class="text-muted d-flex align-items-center">
+          <i class="bi bi-clock me-1"></i>
+          <%= message.created_at.strftime('%H:%M') %>
+        </small>
+      </div>
+      <div class="message-content">
+        <%= simple_format(message.content, {}, wrapper_tag: "div") %>
+      </div>
+    </div>
+  </div>
+</div>

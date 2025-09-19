@@ -1,0 +1,129 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="mb-0">
+            <i class="bi bi-person-gear me-2"></i>
+            Profil bearbeiten
+          </h4>
+        </div>
+        <div class="card-body">
+          <%= form_with model: @user, local: true do |form| %>
+            <% if @user.errors.any? %>
+              <div class="alert alert-danger">
+                <h6><%= pluralize(@user.errors.count, "Fehler") %> verhinderte das Speichern:</h6>
+                <ul class="mb-0">
+                  <% @user.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="row">
+              <!-- Profile Avatar -->
+              <div class="col-12 text-center mb-4">
+                <div class="profile-avatar mb-3">
+                  <%= @user.first_name&.first || @user.email.first.upcase %>
+                </div>
+                <p class="text-muted">
+                  <i class="bi bi-info-circle me-1"></i>
+                  Dein Avatar wird automatisch aus deinem Vornamen generiert
+                </p>
+              </div>
+
+              <!-- Basic Information -->
+              <div class="col-md-6 mb-3">
+                <%= form.label :first_name, class: "form-label" do %>
+                  <i class="bi bi-person me-1"></i>
+                  Vorname
+                <% end %>
+                <%= form.text_field :first_name, class: "form-control", placeholder: "Dein Vorname" %>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <%= form.label :last_name, class: "form-label" do %>
+                  <i class="bi bi-person me-1"></i>
+                  Nachname
+                <% end %>
+                <%= form.text_field :last_name, class: "form-control", placeholder: "Dein Nachname" %>
+              </div>
+
+              <div class="col-12 mb-3">
+                <%= form.label :email, class: "form-label" do %>
+                  <i class="bi bi-envelope me-1"></i>
+                  E-Mail-Adresse
+                <% end %>
+                <%= form.email_field :email, class: "form-control", readonly: true %>
+                <div class="form-text">
+                  <i class="bi bi-info-circle me-1"></i>
+                  E-Mail-Adresse kann nicht geändert werden
+                </div>
+              </div>
+
+              <!-- Bio -->
+              <div class="col-12 mb-3">
+                <%= form.label :bio, class: "form-label" do %>
+                  <i class="bi bi-card-text me-1"></i>
+                  Über mich
+                <% end %>
+                <%= form.text_area :bio, class: "form-control", rows: 4, placeholder: "Erzähle etwas über dich..." %>
+                <div class="form-text">Kurze Beschreibung für dein Profil</div>
+              </div>
+
+              <!-- Contact Information -->
+              <div class="col-md-6 mb-3">
+                <%= form.label :location, class: "form-label" do %>
+                  <i class="bi bi-geo-alt me-1"></i>
+                  Standort
+                <% end %>
+                <%= form.text_field :location, class: "form-control", placeholder: "Stadt, Land" %>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <%= form.label :website, class: "form-label" do %>
+                  <i class="bi bi-globe me-1"></i>
+                  Website
+                <% end %>
+                <%= form.url_field :website, class: "form-control", placeholder: "https://deine-website.de" %>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex gap-2 mt-4">
+              <%= form.submit "Profil speichern", class: "btn btn-primary" %>
+              <%= link_to "Abbrechen", user_path(@user), class: "btn btn-outline-secondary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Account Settings -->
+      <div class="card mt-4">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="bi bi-shield-lock me-2"></i>
+            Konto-Einstellungen
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h6>Passwort ändern</h6>
+              <p class="text-muted">Ändere dein Passwort für mehr Sicherheit</p>
+              <%= link_to "Passwort ändern", edit_user_registration_path, class: "btn btn-outline-primary" %>
+            </div>
+            <div class="col-md-6">
+              <h6>Konto löschen</h6>
+              <p class="text-muted text-danger">Diese Aktion kann nicht rückgängig gemacht werden</p>
+              <%= link_to "Konto löschen", edit_user_registration_path,
+                  class: "btn btn-outline-danger",
+                  onclick: "return confirm('Bist du sicher? Diese Aktion kann nicht rückgängig gemacht werden!')" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

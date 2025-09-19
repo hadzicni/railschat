@@ -1,0 +1,14 @@
+{
+  "name": "app",
+  "private": "true",
+  "scripts": {
+    "build:css": "sass app/assets/stylesheets/application.bootstrap.scss:app/assets/builds/application.bootstrap.css --no-source-map",
+    "watch:css": "sass --watch app/assets/stylesheets/application.bootstrap.scss:app/assets/builds/application.bootstrap.css --no-source-map"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.1",
+    "sass": "^1.92.1"
+  }
+}

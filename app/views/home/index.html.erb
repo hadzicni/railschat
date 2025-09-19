@@ -1,0 +1,54 @@
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="text-center">
+      <h1 class="display-4 mb-4">Willkommen bei RailsChat</h1>
+      <p class="lead mb-4">
+        Eine einfache Chat-Applikation für Echtzeit-Kommunikation in Teams und Gruppen.
+      </p>
+
+      <% unless user_signed_in? %>
+        <div class="d-grid gap-2 d-md-block">
+          <%= link_to "Jetzt registrieren", new_user_registration_path,
+              class: "btn btn-primary btn-lg me-2" %>
+          <%= link_to "Bereits registriert? Anmelden", new_user_session_path,
+              class: "btn btn-outline-primary btn-lg" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<% unless user_signed_in? %>
+<div class="row justify-content-center mt-5">
+  <div class="col-md-10">
+    <div class="row">
+      <div class="col-md-4 text-center mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">Echtzeit-Chat</h5>
+            <p class="card-text">Sende und empfange Nachrichten in Echtzeit mit anderen Benutzern.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 text-center mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">Mehrere Chaträume</h5>
+            <p class="card-text">Erstelle oder betrete verschiedene Chaträume für unterschiedliche Themen.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 text-center mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">Benutzerfreundlich</h5>
+            <p class="card-text">Einfache und intuitive Oberfläche für eine angenehme Chat-Erfahrung.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>
