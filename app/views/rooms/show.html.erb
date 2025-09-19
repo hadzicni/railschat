@@ -1,39 +1,30 @@
-<div class="container-fluid">
+<div class="container">
   <div class="row">
     <div class="col-12">
       <!-- Room Header -->
-      <div class="card mb-4">
+      <div class="card mb-3">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center">
-              <div class="bg-primary bg-opacity-10 rounded p-3 me-3">
-                <i class="bi bi-chat-square-text text-primary fs-3"></i>
-              </div>
-              <div>
-                <h2 class="mb-1"><%= @room.name %></h2>
-                <div class="d-flex align-items-center gap-3">
-                  <span class="text-muted">
-                    <i class="bi bi-people me-1"></i>
-                    <%= pluralize(@room.messages.select(:user_id).distinct.count, 'Teilnehmer') %>
-                  </span>
-                  <span class="badge bg-success connection-indicator" id="connection-status" title="WebSocket getrennt">
-                    <i class="bi bi-wifi me-1"></i>
-                    Verbunden
-                  </span>
-                </div>
-              </div>
+            <div>
+              <h3 class="mb-1">
+                <i class="bi bi-chat-square-text me-2"></i>
+                <%= @room.name %>
+              </h3>
+              <p class="text-muted mb-0">
+                <i class="bi bi-people me-1"></i>
+                <%= @room.messages.select(:user_id).distinct.count %> Teilnehmer
+              </p>
             </div>
             <div>
-              <%= link_to rooms_path, class: "btn btn-outline-primary" do %>
-                <i class="bi bi-arrow-left me-2"></i>
-                Zurück zu Chaträumen
+              <%= link_to rooms_path, class: "btn btn-outline-secondary" do %>
+                <i class="bi bi-arrow-left me-1"></i>
+                Zurück
               <% end %>
             </div>
           </div>
 
           <% if @room.description.present? %>
-            <div class="mt-3 p-3 bg-light rounded">
-              <i class="bi bi-info-circle me-2"></i>
+            <div class="mt-3 p-2 bg-light rounded small">
               <%= @room.description %>
             </div>
           <% end %>
@@ -45,9 +36,9 @@
   <div class="row">
     <!-- Chat Area -->
     <div class="col-lg-8">
-      <div class="card" style="height: 70vh; min-height: 500px;">
+      <div class="card" style="height: 60vh; min-height: 400px;">
         <div class="card-header">
-          <h5 class="mb-0">
+          <h6 class="mb-0">
             <i class="bi bi-chat-dots me-2"></i>
             Chat
           </h5>
