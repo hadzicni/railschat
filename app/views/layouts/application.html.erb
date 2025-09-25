@@ -342,10 +342,10 @@
         init() {
           // Apply stored theme on load
           this.applyTheme(this.currentTheme);
-          
+
           // Listen for system theme changes
           this.watchSystemTheme();
-          
+
           // Update toggle button when DOM is ready
           if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => this.updateToggleButton());
@@ -415,11 +415,11 @@
       function initializeTheme() {
         console.log('🎨 Initializing Theme Manager');
         window.themeManager = new ThemeManager();
-        
+
         // Attach event listener to theme toggle button
         const themeToggle = document.getElementById('theme-toggle');
         console.log('🔍 Looking for theme toggle button...', themeToggle);
-        
+
         if (themeToggle) {
           console.log('✅ Theme toggle button found, attaching event listener');
           themeToggle.addEventListener('click', function(e) {
@@ -452,7 +452,7 @@
       } else {
         initializeTheme();
       }
-      
+
       // Also try after window load as fallback
       window.addEventListener('load', function() {
         if (!window.themeManager) {

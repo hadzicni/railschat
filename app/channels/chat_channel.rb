@@ -12,9 +12,9 @@ class ChatChannel < ApplicationCable::Channel
   def typing_start
     room = Room.find(params[:room_id])
     user = current_user
-    
+
     ChatChannel.broadcast_to(room, {
-      type: 'typing_start',
+      type: "typing_start",
       user_id: user.id,
       user_name: user.display_name
     })
@@ -23,9 +23,9 @@ class ChatChannel < ApplicationCable::Channel
   def typing_stop
     room = Room.find(params[:room_id])
     user = current_user
-    
+
     ChatChannel.broadcast_to(room, {
-      type: 'typing_stop',
+      type: "typing_stop",
       user_id: user.id
     })
   end
@@ -58,7 +58,7 @@ class ChatChannel < ApplicationCable::Channel
     # Log activity
     ActivityLog.log_activity(
       user: user,
-      action: 'message_send',
+      action: "message_send",
       target: message,
       details: "Nachricht gesendet in Raum: #{room.name}",
       ip_address: nil
@@ -78,9 +78,9 @@ class ChatChannel < ApplicationCable::Channel
   def stop_typing
     room = Room.find(params[:room_id])
     user = current_user
-    
+
     ChatChannel.broadcast_to(room, {
-      type: 'typing_stop',
+      type: "typing_stop",
       user_id: user.id
     })
   end

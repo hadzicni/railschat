@@ -8,7 +8,7 @@ class ThemeManager {
   init() {
     // Apply stored theme on load
     this.applyTheme(this.currentTheme);
-    
+
     // Listen for system theme changes
     this.watchSystemTheme();
   }
@@ -47,7 +47,7 @@ class ThemeManager {
 
   applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
-    
+
     // Update Bootstrap theme if available
     if (theme === 'dark') {
       document.documentElement.setAttribute('data-bs-theme', 'dark');
@@ -59,7 +59,7 @@ class ThemeManager {
   updateToggleButton() {
     const toggleButton = document.getElementById('theme-toggle');
     const toggleIcon = document.getElementById('theme-toggle-icon');
-    
+
     if (toggleButton && toggleIcon) {
       if (this.currentTheme === 'dark') {
         toggleIcon.className = 'bi bi-sun-fill';
@@ -75,7 +75,7 @@ class ThemeManager {
 // Initialize theme manager when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
   window.themeManager = new ThemeManager();
-  
+
   // Attach event listener to theme toggle button
   const themeToggle = document.getElementById('theme-toggle');
   if (themeToggle) {
