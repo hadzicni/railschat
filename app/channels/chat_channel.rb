@@ -43,6 +43,17 @@ class ChatChannel < ApplicationCable::Channel
         return
       end
 
+      # Prevent duplicate messages by checking recent messages
+      recent_message = user.messages.where(room: room)
+                          .where("created_at > ?", 2.seconds.ago)
+                          .where(content: data["content"].strip)
+                          .first
+
+      if recent_message
+        Rails.logger.warn "ChatChannel: Duplicate message blocked for user #{user.email}"
+        return
+      end
+
     # Stop typing when sending message
     typing_stop
 

@@ -455,12 +455,18 @@
   import { createConsumer } from "@rails/actioncable";
 
   function initializeChatRoom() {
-    // Skip if already initialized
-    if (window.chatRoomInitialized) {
+    // Skip if already initialized for this room
+    const roomId = <%= @room.id %>;
+    const initKey = `chatRoom_${roomId}_initialized`;
+    
+    if (window[initKey]) {
+      console.log("🔄 Chat room already initialized for room", roomId);
       return;
     }
-    window.chatRoomInitialized = true;
-    const roomId = <%= @room.id %>;
+    
+    console.log("🚀 Initializing chat room", roomId);
+    window[initKey] = true;
+    
     const currentUserId = <%= current_user.id %>;
     // Make currentUserId globally available
     window.currentUserId = currentUserId;
@@ -475,6 +481,8 @@
     let isConnected = false;
     let heartbeatInterval;
     let lastHeartbeat = Date.now();
+    let lastMessageSent = null;
+    let messageCooldown = 1000; // 1 second cooldown between messages
 
     // Initialize WebSocket connection with retry logic
     function initializeWebSocket() {
@@ -891,14 +899,55 @@
     // Override form submission to use WebSocket
     const messageForm = document.getElementById('message-form');
     if (messageForm) {
-      messageForm.addEventListener('submit', function(e) {
+      // Remove any existing listeners to prevent duplicates
+      const existingHandler = messageForm._submitHandler;
+      if (existingHandler) {
+        messageForm.removeEventListener('submit', existingHandler);
+      }
+
+      // Create new handler function
+      const submitHandler = function(e) {
         e.preventDefault();
+        e.stopImmediatePropagation();
+
+        // Prevent multiple rapid submissions
+        if (this.dataset.submitting === 'true') {
+          console.log("🚫 Form already submitting, ignoring duplicate submission");
+          return;
+        }
+
+        this.dataset.submitting = 'true';
 
         const messageInput = document.getElementById('message-input');
         const content = messageInput.value.trim();
 
         if (!content) {
+          this.dataset.submitting = 'false';
           alert('Bitte gib eine Nachricht ein.');
+          return;
+        }
+
+        // Disable form temporarily to prevent multiple submissions
+        const sendButton = document.getElementById('send-button');
+        if (sendButton) {
+          sendButton.disabled = true;
+        }
+
+        // Reset form state after timeout
+        setTimeout(() => {
+          this.dataset.submitting = 'false';
+          if (sendButton) {
+            sendButton.disabled = false;
+          }
+        }, 1000);
+
+        // Check for message cooldown to prevent spam
+        const now = Date.now();
+        if (lastMessageSent && (now - lastMessageSent < messageCooldown)) {
+          console.log("🚫 Message blocked - too soon after last message");
+          if (sendButton) {
+            sendButton.disabled = false;
+          }
           return;
         }
 
@@ -914,6 +963,9 @@
               messageData.reply_to_id = replyToId;
             }
 
+            // Update last message sent timestamp
+            lastMessageSent = now;
+
             // Send via WebSocket
             subscription.perform('send_message', messageData);
 
@@ -923,14 +975,35 @@
 
           } catch (error) {
             console.error("❌ WebSocket send failed:", error);
-            e.target.submit();
+            // Reset form state on error
+            this.dataset.submitting = 'false';
+            if (sendButton) {
+              sendButton.disabled = false;
+            }
+            // Reset timestamp on error
+            lastMessageSent = null;
+            // Don't fallback to HTTP to avoid duplicate messages
           }
         } else {
           console.warn("⚠️ WebSocket not connected, using HTTP fallback");
-          // Fallback: submit form normally
-          e.target.submit();
+          // Reset form state
+          this.dataset.submitting = 'false';
+          if (sendButton) {
+            sendButton.disabled = false;
+          }
+          // Fallback: submit form normally (but only once due to our prevention above)
+          // Create a new form submission event to avoid infinite recursion
+          const form = e.target;
+          setTimeout(() => {
+            form.dataset.submitting = 'false';
+            form.submit();
+          }, 100);
         }
-      });
+      };
+
+      // Store reference and add listener
+      messageForm._submitHandler = submitHandler;
+      messageForm.addEventListener('submit', submitHandler);
     }
 
     // Handle Enter key and typing indicators
@@ -1020,12 +1093,26 @@
 
   // Cleanup on navigation
   document.addEventListener('turbo:before-cache', function() {
-    window.chatRoomInitialized = false;
+    const roomId = <%= @room.id %>;
+    const initKey = `chatRoom_${roomId}_initialized`;
+    window[initKey] = false;
+    
+    // Clean up form handlers
+    const messageForm = document.getElementById('message-form');
+    if (messageForm && messageForm._submitHandler) {
+      messageForm.removeEventListener('submit', messageForm._submitHandler);
+      messageForm._submitHandler = null;
+    }
+    
     if (window.subscription) {
       window.subscription.unsubscribe();
+      window.subscription = null;
     }
     if (window.consumer) {
       window.consumer.disconnect();
+      window.consumer = null;
     }
+    
+    console.log("🧹 Chat room cleaned up for room", roomId);
   });
 </script>
