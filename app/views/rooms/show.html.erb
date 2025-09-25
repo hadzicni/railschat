@@ -203,7 +203,7 @@
 <style>
   /* Chat Container Background */
   .chat-container {
-    background: linear-gradient(to bottom, var(--chat-bg, #f7f7f7), var(--bg-tertiary, #e8e8e8)) !important;
+    background: linear-gradient(to bottom, #f7f7f7, #e8e8e8) !important;
   }
 
   /* WhatsApp-Style Message Bubbles */
@@ -232,23 +232,12 @@
   }
 
   .other-bubble {
-    background: var(--card-bg, white);
-    color: var(--text-primary, #333);
+    background: white;
+    color: #333;
     border-bottom-left-radius: 4px;
     float: left;
     clear: both;
-    border: 1px solid var(--border-color, #e0e0e0);
-  }
-
-  /* Dark theme message bubble overrides */
-  [data-theme="dark"] .own-bubble {
-    background: linear-gradient(135deg, var(--message-own-bg, #0d6efd), #0056b3);
-  }
-
-  [data-theme="dark"] .other-bubble {
-    background: var(--message-other-bg, #495057);
-    color: var(--text-primary, #e9ecef);
-    border: 1px solid var(--border-color, #495057);
+    border: 1px solid #e0e0e0;
   }
 
   .message-bubble-container {
@@ -428,11 +417,7 @@
   /* Typing Indicator Styles */
   #typing-indicator {
     background: rgba(0, 0, 0, 0.02);
-    border-top: 1px solid var(--border-color, #e9ecef);
-  }
-
-  [data-theme="dark"] #typing-indicator {
-    background: rgba(255, 255, 255, 0.02);
+    border-top: 1px solid #e9ecef;
   }
 
   .typing-dots {
@@ -445,7 +430,7 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background-color: var(--text-secondary, #6c757d);
+    background-color: #6c757d;
     display: inline-block;
     animation: typing-animation 1.4s infinite ease-in-out;
   }
@@ -495,12 +480,12 @@
     function initializeWebSocket() {
       try {
         console.log(`🚀 Initializing WebSocket connection... (attempt ${connectionAttempts + 1}/${maxRetries + 1})`);
-        
+
         // Clear any existing consumer
         if (consumer) {
           consumer.disconnect();
         }
-        
+
         consumer = createConsumer();
 
         subscription = consumer.subscriptions.create(
@@ -512,13 +497,13 @@
               connectionAttempts = 0; // Reset on successful connection
               lastHeartbeat = Date.now();
               updateConnectionStatus(true);
-              
+
               // Clear any retry timeout
               if (retryTimeout) {
                 clearTimeout(retryTimeout);
                 retryTimeout = null;
               }
-              
+
               // Start heartbeat monitoring
               startHeartbeat();
             },
@@ -528,7 +513,7 @@
               isConnected = false;
               stopHeartbeat();
               updateConnectionStatus(false);
-              
+
               // Attempt to reconnect if we haven't exceeded max retries
               if (connectionAttempts < maxRetries) {
                 scheduleReconnect();
@@ -539,7 +524,7 @@
               console.error("❌ WebSocket connection rejected");
               isConnected = false;
               updateConnectionStatus(false);
-              
+
               // Try to reconnect
               if (connectionAttempts < maxRetries) {
                 scheduleReconnect();
@@ -549,7 +534,7 @@
             received: function(data) {
               console.log("📥 Received data:", data);
               lastHeartbeat = Date.now(); // Update heartbeat on any received data
-              
+
               if (data.type === 'typing_start') {
                 handleTypingStart(data);
               } else if (data.type === 'typing_stop') {
@@ -564,7 +549,7 @@
         console.error("❌ WebSocket initialization failed:", error);
         isConnected = false;
         updateConnectionStatus(false);
-        
+
         if (connectionAttempts < maxRetries) {
           scheduleReconnect();
         }
@@ -574,9 +559,9 @@
     function scheduleReconnect() {
       connectionAttempts++;
       const delay = Math.min(1000 * Math.pow(2, connectionAttempts - 1), 10000); // Exponential backoff, max 10s
-      
+
       console.log(`🔄 Scheduling reconnection in ${delay}ms (attempt ${connectionAttempts}/${maxRetries})`);
-      
+
       retryTimeout = setTimeout(() => {
         initializeWebSocket();
       }, delay);
@@ -587,7 +572,7 @@
       if (heartbeatInterval) {
         clearInterval(heartbeatInterval);
       }
-      
+
       heartbeatInterval = setInterval(() => {
         const now = Date.now();
         // Check if connection is still alive (no recent activity for more than 30 seconds)
@@ -666,7 +651,7 @@
         indicator.style.display = 'none';
       }
     }
-    
+
     function sendTypingStart() {
       if (isConnected && subscription && typeof subscription.perform === 'function') {
         console.log("📝 Sending typing start");
@@ -939,14 +924,14 @@
             }
 
             console.log("📤 Sending message via WebSocket:", messageData);
-            
+
             // Send via WebSocket
             subscription.perform('send_message', messageData);
-            
+
             // Clear input and hide reply preview
             messageInput.value = '';
             hideReplyPreview();
-            
+
             console.log("✅ Message sent via WebSocket");
           } catch (error) {
             console.error("❌ WebSocket send failed:", error);
@@ -1043,7 +1028,7 @@
   } else {
     initializeChatRoom();
   }
-  
+
   // Also listen for Turbo frame loads
   document.addEventListener('turbo:frame-load', initializeChatRoom);
   document.addEventListener('turbo:load', initializeChatRoom);

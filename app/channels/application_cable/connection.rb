@@ -12,7 +12,7 @@ module ApplicationCable
 
     def find_verified_user
       # Try multiple methods to find authenticated user
-      
+
       # Method 1: Try Devise session (most reliable)
       if user_id = request.session.dig("warden.user.user.key", 0, 0)
         user = User.find_by(id: user_id)
