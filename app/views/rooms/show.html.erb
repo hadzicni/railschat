@@ -526,30 +526,23 @@
     }
 
     // Typing indicator functions
-    function handleTypingStart(data) {
-      console.log('👤 Typing start received:', data.user_name, 'ID:', data.user_id, 'Current user ID:', currentUserId);
+    function handleTypingStart(data) {currentUserId);
       if (data.user_id !== currentUserId) {
         typingUsers.add(data.user_name);
-        console.log('👥 Added to typing users:', Array.from(typingUsers));
         updateTypingIndicator();
       } else {
-        console.log('🚫 Ignoring own typing start signal');
       }
     }
 
     function handleTypingStop(data) {
-      console.log('👤 Typing stop received:', data.user_name, 'ID:', data.user_id);
       typingUsers.delete(data.user_name);
-      console.log('👥 Removed from typing users:', Array.from(typingUsers));
       updateTypingIndicator();
     }
 
     function updateTypingIndicator() {
       const indicator = document.getElementById('typing-indicator');
       const usersElement = document.getElementById('typing-users');
-      
-      console.log('🔄 Updating typing indicator, users:', Array.from(typingUsers));
-      
+
       if (typingUsers.size > 0) {
         const userArray = Array.from(typingUsers);
         let text;
@@ -562,10 +555,8 @@
         }
         usersElement.textContent = text;
         indicator.style.display = 'block';
-        console.log('✅ Showing typing indicator:', text);
       } else {
         indicator.style.display = 'none';
-        console.log('❌ Hiding typing indicator');
       }
     }    function sendTypingStart() {
       if (subscription && typeof subscription.perform === 'function') {
@@ -583,12 +574,11 @@
       if (isTyping) {
         isTyping = false;
         sendTypingStop();
-        console.log('⌨️ Stopped typing (' + reason + ')');
         if (typingTimer) {
           clearTimeout(typingTimer);
           typingTimer = null;
         }
-        
+
         // Immediately hide typing indicator locally (don't wait for WebSocket response)
         hideLocalTypingIndicator();
       }
@@ -598,7 +588,6 @@
       const indicator = document.getElementById('typing-indicator');
       if (indicator) {
         indicator.style.display = 'none';
-        console.log('🚫 Hiding typing indicator locally');
       }
     }
 
@@ -851,7 +840,7 @@
     const messageInput = document.getElementById('message-input');
     let isTyping = false;
     let hasFocus = false;
-    
+
     if (messageInput) {
 
       messageInput.addEventListener('keydown', function(e) {
@@ -863,29 +852,26 @@
 
       messageInput.addEventListener('focus', function() {
         hasFocus = true;
-        console.log('📝 Input field focused');
       });
 
       messageInput.addEventListener('blur', function() {
         hasFocus = false;
-        console.log('📝 Input field blurred');
         stopTyping('blur');
       });
 
       messageInput.addEventListener('input', function(e) {
         const hasContent = this.value.trim().length > 0;
-        
+
         // Only send typing indicators if the field is in focus
         if (hasFocus && hasContent && !isTyping) {
           isTyping = true;
           sendTypingStart();
-          console.log('⌨️ Started typing');
-          
+
           // Clear existing timer
           if (typingTimer) {
             clearTimeout(typingTimer);
           }
-          
+
           // Set timer to stop typing after 3 seconds of inactivity
           typingTimer = setTimeout(function() {
             stopTyping('timeout');
