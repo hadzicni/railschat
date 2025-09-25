@@ -51,8 +51,8 @@
                       <%= link_to t('admin.common.edit'), edit_admin_role_path(role), class: 'btn btn-sm btn-outline-secondary' %>
                       <% unless Role::SYSTEM_ROLES.key?(role.name) %>
                         <%= link_to t('admin.common.delete'), admin_role_path(role),
-                            method: :delete,
                             data: {
+                              method: :delete,
                               confirm: t('admin.roles.delete_confirmation', role: role.name)
                             },
                             class: 'btn btn-sm btn-outline-danger' %>

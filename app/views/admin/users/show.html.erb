@@ -101,11 +101,13 @@
                 <span class="badge me-1" style="background-color: <%= role.color %>; color: white;">
                   <%= role.name %>
                   <% if @user.can_have_roles_modified_by?(current_user) %>
-                    <%= link_to remove_role_admin_user_path(@user, role_id: role.id),
+                    <%= button_to remove_role_admin_user_path(@user, role_id: role.id),
                         method: :delete,
-                        data: { confirm: "Rolle '#{role.name}' entfernen?" },
-                        class: 'text-white text-decoration-none ms-1',
-                        style: 'opacity: 0.8;' do %>
+                        data: { 
+                          confirm: "Rolle '#{role.name}' entfernen?" 
+                        },
+                        class: 'btn p-0 border-0 bg-transparent text-white text-decoration-none ms-1',
+                        style: 'opacity: 0.8; line-height: 1;' do %>
                       ×
                     <% end %>
                   <% end %>
