@@ -26,10 +26,10 @@ module ApplicationCable
       end
 
       # Method 2: Try cookies (backup for session issues)
-      if request.cookies['_railschat_session'].present?
+      if request.cookies["_railschat_session"].present?
         begin
           # Try to decrypt the session cookie to get user info
-          decoded_session = Rails.application.message_verifier(:signed_cookie).verify(request.cookies['_railschat_session'])
+          decoded_session = Rails.application.message_verifier(:signed_cookie).verify(request.cookies["_railschat_session"])
           if decoded_session && decoded_session.dig("warden.user.user.key", 0, 0)
             user_id = decoded_session.dig("warden.user.user.key", 0, 0)
             user = User.find_by(id: user_id)

@@ -458,15 +458,15 @@
     // Skip if already initialized for this room
     const roomId = <%= @room.id %>;
     const initKey = `chatRoom_${roomId}_initialized`;
-    
+
     if (window[initKey]) {
       console.log("🔄 Chat room already initialized for room", roomId);
       return;
     }
-    
+
     console.log("🚀 Initializing chat room", roomId);
     window[initKey] = true;
-    
+
     const currentUserId = <%= current_user.id %>;
     // Make currentUserId globally available
     window.currentUserId = currentUserId;
@@ -537,7 +537,7 @@
                   connectionAttempts++;
                   const authDelay = 2000 + (connectionAttempts * 1000); // 2s, 3s, 4s delays
                   console.log("🔐 Authentication issue detected, retrying in " + authDelay + "ms");
-                  
+
                   retryTimeout = setTimeout(() => {
                     connectionAttempts--; // Don't count auth retries against normal limit
                     initializeWebSocket();
@@ -575,7 +575,7 @@
       const delay = Math.min(1000 * Math.pow(2, connectionAttempts - 1), 10000); // Exponential backoff, max 10s
 
       console.log("⏳ Scheduling WebSocket reconnect in " + delay + "ms (attempt " + connectionAttempts + "/" + maxRetries + ")");
-      
+
       retryTimeout = setTimeout(() => {
         initializeWebSocket();
       }, delay);
@@ -1108,14 +1108,14 @@
     const roomId = <%= @room.id %>;
     const initKey = `chatRoom_${roomId}_initialized`;
     window[initKey] = false;
-    
+
     // Clean up form handlers
     const messageForm = document.getElementById('message-form');
     if (messageForm && messageForm._submitHandler) {
       messageForm.removeEventListener('submit', messageForm._submitHandler);
       messageForm._submitHandler = null;
     }
-    
+
     if (window.subscription) {
       window.subscription.unsubscribe();
       window.subscription = null;
@@ -1124,7 +1124,7 @@
       window.consumer.disconnect();
       window.consumer = null;
     }
-    
+
     console.log("🧹 Chat room cleaned up for room", roomId);
   });
 </script>
