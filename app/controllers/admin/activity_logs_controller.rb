@@ -15,7 +15,5 @@ class Admin::ActivityLogsController < Admin::BaseController
     @actions = ActivityLog::ACTIONS.values
   end
 
-  def show
-    @activity_log = ActivityLog.find(params[:id])
-  end
+
 end

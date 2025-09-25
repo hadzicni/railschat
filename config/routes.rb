@@ -23,7 +23,7 @@ Rails.application.routes.draw do
 
   # Admin routes
   namespace :admin do
-    resources :activity_logs, only: [:index, :show]
+    resources :activity_logs, only: [:index]
     resources :dashboard, only: [ :index ]
     resources :users do
       member do

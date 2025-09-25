@@ -57,7 +57,6 @@
                 <th>Aktion</th>
                 <th>Details</th>
                 <th>IP-Adresse</th>
-                <th>Aktionen</th>
               </tr>
             </thead>
             <tbody>
@@ -93,11 +92,6 @@
                   </td>
                   <td>
                     <code class="small"><%= log.ip_address %></code>
-                  </td>
-                  <td>
-                    <%= link_to admin_activity_log_path(log), class: "btn btn-sm btn-outline-primary", title: "Details" do %>
-                      <i class="bi bi-eye"></i>
-                    <% end %>
                   </td>
                 </tr>
               <% end %>
