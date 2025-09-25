@@ -3,7 +3,6 @@ class ActivityLog < ApplicationRecord
   belongs_to :target, polymorphic: true, optional: true
 
   validates :action, presence: true
-  validates :ip_address, presence: true
 
   scope :recent, -> { order(created_at: :desc) }
   scope :by_action, ->(action) { where(action: action) }
@@ -26,13 +25,12 @@ class ActivityLog < ApplicationRecord
     delete_message: "delete_message"
   }.freeze
 
-  def self.log_activity(user:, action:, target: nil, details: nil, request: nil, ip_address: nil)
+  def self.log_activity(user:, action:, target: nil, details: nil, request: nil)
     create!(
       user: user,
       action: action,
       target: target,
       details: details,
-      ip_address: ip_address || request&.remote_ip || "unknown",
       user_agent: request&.user_agent || "unknown"
     )
   end

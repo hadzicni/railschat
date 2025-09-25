@@ -9,7 +9,7 @@ class Users::SessionsController < Devise::SessionsController
           action: "login",
           target: resource,
           details: "Benutzer angemeldet",
-          ip_address: request.remote_ip
+          request: request
         )
       end
     end
@@ -21,7 +21,7 @@ class Users::SessionsController < Devise::SessionsController
       action: "logout",
       target: current_user,
       details: "Benutzer abgemeldet",
-      ip_address: request.remote_ip
+      request: request
     )
     super
   end

@@ -15,7 +15,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         action: "profile_update",
         target: resource,
         details: "Profil aktualisiert",
-        ip_address: request.remote_ip
+        request: request
       )
       set_flash_message_for_update(resource, prev_unconfirmed_email)
       bypass_sign_in resource, scope: resource_name if sign_in_after_change_password?
@@ -43,7 +43,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         action: "register",
         target: resource,
         details: "Neuer Benutzer registriert: #{resource.email}",
-        ip_address: request.remote_ip
+        request: request
       )
 
       if resource.active_for_authentication?

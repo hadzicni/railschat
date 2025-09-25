@@ -74,8 +74,7 @@ class ChatChannel < ApplicationCable::Channel
       user: user,
       action: "message_send",
       target: message,
-      details: "Nachricht gesendet in Raum: #{room.name}",
-      ip_address: nil
+      details: "Nachricht gesendet in Raum: #{room.name}"
     )
 
     ChatChannel.broadcast_to(room, {
