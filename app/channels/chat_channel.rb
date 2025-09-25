@@ -32,14 +32,16 @@ class ChatChannel < ApplicationCable::Channel
   end
 
   def send_message(data)
-    room = Room.find(params[:room_id])
-    user = current_user
+    begin
+      room = Room.find(params[:room_id])
+      user = current_user
 
-    # Check if user has permission to send messages
-    unless user.can?("send_messages")
-      reject
-      return
-    end
+      # Check if user has permission to send messages
+      unless user.can?("send_messages")
+        Rails.logger.warn "ChatChannel: User #{user.email} tried to send message without permission"
+        reject
+        return
+      end
 
     # Stop typing when sending message
     typing_stop
@@ -72,6 +74,14 @@ class ChatChannel < ApplicationCable::Channel
       user_email: user.email,
       created_at: message.created_at.in_time_zone("Berlin").strftime("%H:%M")
     })
+
+    Rails.logger.info "ChatChannel: Message sent successfully - User: #{user.email}, Room: #{room.name}"
+
+    rescue => e
+      Rails.logger.error "ChatChannel: Error sending message - #{e.class}: #{e.message}"
+      Rails.logger.error e.backtrace.join("\n")
+      reject
+    end
   end
 
   private

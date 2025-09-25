@@ -38,10 +38,13 @@
     <div class="col-lg-8">
       <div class="card" style="height: 60vh; min-height: 400px;">
         <div class="card-header">
-          <h6 class="mb-0">
-            <i class="bi bi-chat-dots me-2"></i>
-            Chat
-          </h5>
+          <h6 class="mb-0 d-flex justify-content-between align-items-center">
+            <span>
+              <i class="bi bi-chat-dots me-2"></i>
+              Chat
+            </span>
+            <span id="connection-status" class="badge bg-warning" title="WebSocket getrennt">●</span>
+          </h6>
         </div>
 
         <div class="card-body p-0 d-flex flex-column" style="height: calc(100% - 60px);">
@@ -463,10 +466,15 @@
   }
 </style>
 
-<script type="module">
+<script type="module" data-turbo-eval="false">
   import { createConsumer } from "@rails/actioncable";
 
-  document.addEventListener('DOMContentLoaded', function() {
+  function initializeChatRoom() {
+    // Skip if already initialized
+    if (window.chatRoomInitialized) {
+      return;
+    }
+    window.chatRoomInitialized = true;
     const roomId = <%= @room.id %>;
     const currentUserId = <%= current_user.id %>;
     // Make currentUserId globally available
@@ -476,24 +484,72 @@
     let typingUsers = new Set();
     let typingTimer = null;
     let isTyping = false;
+    let connectionAttempts = 0;
+    let maxRetries = 3;
+    let retryTimeout;
+    let isConnected = false;
+    let heartbeatInterval;
+    let lastHeartbeat = Date.now();
 
-    // Initialize WebSocket connection
+    // Initialize WebSocket connection with retry logic
     function initializeWebSocket() {
       try {
+        console.log(`🚀 Initializing WebSocket connection... (attempt ${connectionAttempts + 1}/${maxRetries + 1})`);
+        
+        // Clear any existing consumer
+        if (consumer) {
+          consumer.disconnect();
+        }
+        
         consumer = createConsumer();
 
         subscription = consumer.subscriptions.create(
           { channel: "ChatChannel", room_id: roomId },
           {
             connected: function() {
+              console.log("✅ WebSocket connected successfully");
+              isConnected = true;
+              connectionAttempts = 0; // Reset on successful connection
+              lastHeartbeat = Date.now();
               updateConnectionStatus(true);
+              
+              // Clear any retry timeout
+              if (retryTimeout) {
+                clearTimeout(retryTimeout);
+                retryTimeout = null;
+              }
+              
+              // Start heartbeat monitoring
+              startHeartbeat();
             },
 
             disconnected: function() {
+              console.log("❌ WebSocket disconnected");
+              isConnected = false;
+              stopHeartbeat();
               updateConnectionStatus(false);
+              
+              // Attempt to reconnect if we haven't exceeded max retries
+              if (connectionAttempts < maxRetries) {
+                scheduleReconnect();
+              }
+            },
+
+            rejected: function() {
+              console.error("❌ WebSocket connection rejected");
+              isConnected = false;
+              updateConnectionStatus(false);
+              
+              // Try to reconnect
+              if (connectionAttempts < maxRetries) {
+                scheduleReconnect();
+              }
             },
 
             received: function(data) {
+              console.log("📥 Received data:", data);
+              lastHeartbeat = Date.now(); // Update heartbeat on any received data
+              
               if (data.type === 'typing_start') {
                 handleTypingStart(data);
               } else if (data.type === 'typing_stop') {
@@ -506,7 +562,51 @@
         );
       } catch (error) {
         console.error("❌ WebSocket initialization failed:", error);
+        isConnected = false;
         updateConnectionStatus(false);
+        
+        if (connectionAttempts < maxRetries) {
+          scheduleReconnect();
+        }
+      }
+    }
+
+    function scheduleReconnect() {
+      connectionAttempts++;
+      const delay = Math.min(1000 * Math.pow(2, connectionAttempts - 1), 10000); // Exponential backoff, max 10s
+      
+      console.log(`🔄 Scheduling reconnection in ${delay}ms (attempt ${connectionAttempts}/${maxRetries})`);
+      
+      retryTimeout = setTimeout(() => {
+        initializeWebSocket();
+      }, delay);
+    }
+
+    function startHeartbeat() {
+      // Clear existing heartbeat
+      if (heartbeatInterval) {
+        clearInterval(heartbeatInterval);
+      }
+      
+      heartbeatInterval = setInterval(() => {
+        const now = Date.now();
+        // Check if connection is still alive (no recent activity for more than 30 seconds)
+        if (now - lastHeartbeat > 30000) {
+          console.log("💔 Heartbeat timeout - connection seems dead");
+          if (isConnected) {
+            // Force disconnect and reconnect
+            isConnected = false;
+            updateConnectionStatus(false);
+            scheduleReconnect();
+          }
+        }
+      }, 15000); // Check every 15 seconds
+    }
+
+    function stopHeartbeat() {
+      if (heartbeatInterval) {
+        clearInterval(heartbeatInterval);
+        heartbeatInterval = null;
       }
     }
 
@@ -515,13 +615,20 @@
       const indicator = document.getElementById('connection-status');
       if (indicator) {
         if (connected) {
-          indicator.className = 'badge bg-success ms-2';
-          indicator.title = 'WebSocket verbunden';
-          indicator.textContent = '●';
+          indicator.className = 'badge bg-success';
+          indicator.title = 'WebSocket verbunden - Nachrichten werden in Echtzeit übertragen';
+          indicator.textContent = '● Online';
         } else {
-          indicator.className = 'badge bg-warning ms-2';
-          indicator.title = 'WebSocket getrennt';
-          indicator.textContent = '●';
+          const isRetrying = connectionAttempts < maxRetries;
+          if (isRetrying) {
+            indicator.className = 'badge bg-warning';
+            indicator.title = `WebSocket getrennt - Versuche Wiederverbindung... (${connectionAttempts}/${maxRetries})`;
+            indicator.textContent = '● Verbinde...';
+          } else {
+            indicator.className = 'badge bg-danger';
+            indicator.title = 'WebSocket getrennt - Nachrichten werden über HTTP gesendet';
+            indicator.textContent = '● Offline';
+          }
         }
       }
     }
@@ -558,17 +665,23 @@
       } else {
         indicator.style.display = 'none';
       }
-    }    function sendTypingStart() {
-      if (subscription && typeof subscription.perform === 'function') {
+    }
+    
+    function sendTypingStart() {
+      if (isConnected && subscription && typeof subscription.perform === 'function') {
+        console.log("📝 Sending typing start");
         subscription.perform('typing_start');
       } else {
+        console.warn("⚠️ Cannot send typing start - WebSocket not connected");
       }
     }
 
     function sendTypingStop() {
-      if (subscription && typeof subscription.perform === 'function') {
+      if (isConnected && subscription && typeof subscription.perform === 'function') {
+        console.log("⏹️ Sending typing stop");
         subscription.perform('typing_stop');
       } else {
+        console.warn("⚠️ Cannot send typing stop - WebSocket not connected");
       }
     }
 
@@ -813,23 +926,37 @@
           return;
         }
 
-        if (subscription && typeof subscription.perform === 'function') {
-          // Stop typing when sending message
-          stopTyping('message sent');
+        // Check if WebSocket is available and connected
+        if (isConnected && subscription && typeof subscription.perform === 'function') {
+          try {
+            // Stop typing when sending message
+            stopTyping('message sent');
 
-          // Prepare message data
-          const messageData = { content: content };
-          if (replyToId) {
-            messageData.reply_to_id = replyToId;
+            // Prepare message data
+            const messageData = { content: content };
+            if (replyToId) {
+              messageData.reply_to_id = replyToId;
+            }
+
+            console.log("📤 Sending message via WebSocket:", messageData);
+            
+            // Send via WebSocket
+            subscription.perform('send_message', messageData);
+            
+            // Clear input and hide reply preview
+            messageInput.value = '';
+            hideReplyPreview();
+            
+            console.log("✅ Message sent via WebSocket");
+          } catch (error) {
+            console.error("❌ WebSocket send failed:", error);
+            // Fallback to HTTP if WebSocket fails
+            console.log("🔄 Falling back to HTTP submission");
+            e.target.submit();
           }
-
-          // Send via WebSocket
-          subscription.perform('send_message', messageData);
-          messageInput.value = '';
-
-          // Hide reply preview after sending
-          hideReplyPreview();
         } else {
+          console.warn("⚠️ WebSocket not connected, using HTTP fallback");
+          console.log("Connection status:", { isConnected, subscription: !!subscription });
           // Fallback: submit form normally
           e.target.submit();
         }
@@ -908,5 +1035,27 @@
 
     // Initialize WebSocket
     initializeWebSocket();
+  }
+
+  // Initialize on different events for Turbo compatibility
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeChatRoom);
+  } else {
+    initializeChatRoom();
+  }
+  
+  // Also listen for Turbo frame loads
+  document.addEventListener('turbo:frame-load', initializeChatRoom);
+  document.addEventListener('turbo:load', initializeChatRoom);
+
+  // Cleanup on navigation
+  document.addEventListener('turbo:before-cache', function() {
+    window.chatRoomInitialized = false;
+    if (window.subscription) {
+      window.subscription.unsubscribe();
+    }
+    if (window.consumer) {
+      window.consumer.disconnect();
+    }
   });
 </script>
