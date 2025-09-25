@@ -21,18 +21,18 @@
       <%= form_with url: admin_activity_logs_path, method: :get, local: true, class: "row g-3" do |form| %>
         <div class="col-md-4">
           <%= form.label :action_filter, "Aktion", class: "form-label" %>
-          <%= form.select :action_filter, 
+          <%= form.select :action_filter,
               options_for_select([["Alle Aktionen", ""]] + @actions.map { |action| [action.humanize, action] }, params[:action_filter]),
               {}, { class: "form-select" } %>
         </div>
-        
+
         <div class="col-md-4">
           <%= form.label :user_id, "Benutzer", class: "form-label" %>
           <%= form.select :user_id,
               options_for_select([["Alle Benutzer", ""]] + @users.map { |user| [user.display_name, user.id] }, params[:user_id]),
               {}, { class: "form-select" } %>
         </div>
-        
+
         <div class="col-md-4 d-flex align-items-end">
           <%= form.submit "Filtern", class: "btn btn-primary me-2" %>
           <%= link_to "Zurücksetzen", admin_activity_logs_path, class: "btn btn-outline-secondary" %>
@@ -98,7 +98,7 @@
             </tbody>
           </table>
         </div>
-        
+
       <% else %>
         <div class="text-center py-4">
           <i class="bi bi-activity display-4 text-muted"></i>

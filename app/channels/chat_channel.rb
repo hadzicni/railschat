@@ -6,6 +6,28 @@ class ChatChannel < ApplicationCable::Channel
 
   def unsubscribed
     # Any cleanup needed when channel is unsubscribed
+    stop_typing
+  end
+
+  def typing_start
+    room = Room.find(params[:room_id])
+    user = current_user
+    
+    ChatChannel.broadcast_to(room, {
+      type: 'typing_start',
+      user_id: user.id,
+      user_name: user.display_name
+    })
+  end
+
+  def typing_stop
+    room = Room.find(params[:room_id])
+    user = current_user
+    
+    ChatChannel.broadcast_to(room, {
+      type: 'typing_stop',
+      user_id: user.id
+    })
   end
 
   def send_message(data)
@@ -17,6 +39,9 @@ class ChatChannel < ApplicationCable::Channel
       reject
       return
     end
+
+    # Stop typing when sending message
+    typing_stop
 
     message_params = {
       content: data["content"],
@@ -49,6 +74,16 @@ class ChatChannel < ApplicationCable::Channel
   end
 
   private
+
+  def stop_typing
+    room = Room.find(params[:room_id])
+    user = current_user
+    
+    ChatChannel.broadcast_to(room, {
+      type: 'typing_stop',
+      user_id: user.id
+    })
+  end
 
   def render_message(message)
     ApplicationController.render(

@@ -9,7 +9,6 @@ class ChatRoom {
   }
 
   initialize() {
-    console.log('🔧 Initializing WebSocket for room:', this.roomId);
 
     try {
       this.consumer = createConsumer();
@@ -18,23 +17,19 @@ class ChatRoom {
         { channel: "ChatChannel", room_id: this.roomId },
         {
           connected: () => {
-            console.log("✅ Connected to ChatChannel for room " + this.roomId);
             this.updateConnectionStatus(true);
           },
 
           disconnected: () => {
-            console.log("❌ Disconnected from ChatChannel");
             this.updateConnectionStatus(false);
           },
 
           received: (data) => {
-            console.log("📨 Received message:", data);
             this.addMessageToChat(data);
           }
         }
       );
     } catch (error) {
-      console.error("❌ WebSocket initialization failed:", error);
       this.updateConnectionStatus(false);
     }
   }
@@ -74,11 +69,9 @@ class ChatRoom {
 
   sendMessage(content) {
     if (this.subscription && typeof this.subscription.perform === 'function') {
-      console.log('🚀 Sending via WebSocket:', content);
       this.subscription.perform('send_message', { content: content });
       return true;
     } else {
-      console.log('⚠️ No WebSocket connection available');
       return false;
     }
   }
