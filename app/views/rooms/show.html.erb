@@ -479,7 +479,6 @@
     // Initialize WebSocket connection with retry logic
     function initializeWebSocket() {
       try {
-        console.log(`🚀 Initializing WebSocket connection... (attempt ${connectionAttempts + 1}/${maxRetries + 1})`);
 
         // Clear any existing consumer
         if (consumer) {
@@ -492,7 +491,6 @@
           { channel: "ChatChannel", room_id: roomId },
           {
             connected: function() {
-              console.log("✅ WebSocket connected successfully");
               isConnected = true;
               connectionAttempts = 0; // Reset on successful connection
               lastHeartbeat = Date.now();
@@ -509,7 +507,6 @@
             },
 
             disconnected: function() {
-              console.log("❌ WebSocket disconnected");
               isConnected = false;
               stopHeartbeat();
               updateConnectionStatus(false);
@@ -532,7 +529,6 @@
             },
 
             received: function(data) {
-              console.log("📥 Received data:", data);
               lastHeartbeat = Date.now(); // Update heartbeat on any received data
 
               if (data.type === 'typing_start') {
@@ -560,8 +556,6 @@
       connectionAttempts++;
       const delay = Math.min(1000 * Math.pow(2, connectionAttempts - 1), 10000); // Exponential backoff, max 10s
 
-      console.log(`🔄 Scheduling reconnection in ${delay}ms (attempt ${connectionAttempts}/${maxRetries})`);
-
       retryTimeout = setTimeout(() => {
         initializeWebSocket();
       }, delay);
@@ -577,7 +571,6 @@
         const now = Date.now();
         // Check if connection is still alive (no recent activity for more than 30 seconds)
         if (now - lastHeartbeat > 30000) {
-          console.log("💔 Heartbeat timeout - connection seems dead");
           if (isConnected) {
             // Force disconnect and reconnect
             isConnected = false;
@@ -601,17 +594,17 @@
       if (indicator) {
         if (connected) {
           indicator.className = 'badge bg-success';
-          indicator.title = 'WebSocket verbunden - Nachrichten werden in Echtzeit übertragen';
+          indicator.title = 'WebSocket connected';
           indicator.textContent = '● Online';
         } else {
           const isRetrying = connectionAttempts < maxRetries;
           if (isRetrying) {
             indicator.className = 'badge bg-warning';
-            indicator.title = `WebSocket getrennt - Versuche Wiederverbindung... (${connectionAttempts}/${maxRetries})`;
+            indicator.title = `WebSocket disconnected (${connectionAttempts}/${maxRetries})`;
             indicator.textContent = '● Verbinde...';
           } else {
             indicator.className = 'badge bg-danger';
-            indicator.title = 'WebSocket getrennt - Nachrichten werden über HTTP gesendet';
+            indicator.title = 'WebSocket disconnected - HTTP Fallback';
             indicator.textContent = '● Offline';
           }
         }
@@ -654,7 +647,6 @@
 
     function sendTypingStart() {
       if (isConnected && subscription && typeof subscription.perform === 'function') {
-        console.log("📝 Sending typing start");
         subscription.perform('typing_start');
       } else {
         console.warn("⚠️ Cannot send typing start - WebSocket not connected");
@@ -663,7 +655,6 @@
 
     function sendTypingStop() {
       if (isConnected && subscription && typeof subscription.perform === 'function') {
-        console.log("⏹️ Sending typing stop");
         subscription.perform('typing_stop');
       } else {
         console.warn("⚠️ Cannot send typing stop - WebSocket not connected");
@@ -923,8 +914,6 @@
               messageData.reply_to_id = replyToId;
             }
 
-            console.log("📤 Sending message via WebSocket:", messageData);
-
             // Send via WebSocket
             subscription.perform('send_message', messageData);
 
@@ -932,16 +921,12 @@
             messageInput.value = '';
             hideReplyPreview();
 
-            console.log("✅ Message sent via WebSocket");
           } catch (error) {
             console.error("❌ WebSocket send failed:", error);
-            // Fallback to HTTP if WebSocket fails
-            console.log("🔄 Falling back to HTTP submission");
             e.target.submit();
           }
         } else {
           console.warn("⚠️ WebSocket not connected, using HTTP fallback");
-          console.log("Connection status:", { isConnected, subscription: !!subscription });
           // Fallback: submit form normally
           e.target.submit();
         }

@@ -16,16 +16,6 @@ class Role < ApplicationRecord
       color: "#dc3545",
       permissions: [ "manage_users", "manage_roles", "manage_rooms", "ban_users", "unban_users", "delete_messages", "moderate_chat", "view_admin_panel", "create_announcements", "manage_settings", "view_reports", "export_data" ]
     },
-    "moderator" => {
-      description: "Chat moderation capabilities",
-      color: "#fd7e14",
-      permissions: [ "ban_users", "unban_users", "delete_messages", "moderate_chat", "view_reports" ]
-    },
-    "vip" => {
-      description: "VIP user with enhanced features",
-      color: "#6f42c1",
-      permissions: [ "create_rooms", "pin_messages" ]
-    },
     "user" => {
       description: "Regular user",
       color: "#6c757d",
