@@ -11,15 +11,27 @@ module ApplicationCable
     private
 
     def find_verified_user
-      # Simple approach: try to find user from request headers or session
+      # Try to find user from Devise session
       if user_id = request.session.dig("warden.user.user.key", 0, 0)
-        User.find_by(id: user_id)
-      else
-        # For testing: allow anonymous connections
-        # In production you'd want to reject_unauthorized_connection
-        logger.warn "ActionCable: No authenticated user found, allowing anonymous connection"
-        User.first # Temporary: use first user for testing
+        user = User.find_by(id: user_id)
+        if user
+          logger.info "ActionCable: User #{user.email} connected"
+          return user
+        end
       end
+      
+      # Try to get user_id from URL params (for testing purposes)
+      if params[:user_id].present?
+        user = User.find_by(id: params[:user_id])
+        if user
+          logger.warn "ActionCable: User #{user.email} connected via param (dev only)"
+          return user
+        end
+      end
+      
+      # Reject unauthorized connections
+      logger.error "ActionCable: No authenticated user found, rejecting connection"
+      reject_unauthorized_connection
     end
   end
 end

@@ -475,6 +475,7 @@
     let replyToId = null;
     let typingUsers = new Set();
     let typingTimer = null;
+    let isTyping = false;
 
     // Initialize WebSocket connection
     function initializeWebSocket() {
@@ -526,11 +527,10 @@
     }
 
     // Typing indicator functions
-    function handleTypingStart(data) {currentUserId);
+    function handleTypingStart(data) {
       if (data.user_id !== currentUserId) {
         typingUsers.add(data.user_name);
         updateTypingIndicator();
-      } else {
       }
     }
 
@@ -561,12 +561,14 @@
     }    function sendTypingStart() {
       if (subscription && typeof subscription.perform === 'function') {
         subscription.perform('typing_start');
+      } else {
       }
     }
 
     function sendTypingStop() {
       if (subscription && typeof subscription.perform === 'function') {
         subscription.perform('typing_stop');
+      } else {
       }
     }
 
@@ -825,8 +827,6 @@
           subscription.perform('send_message', messageData);
           messageInput.value = '';
 
-
-
           // Hide reply preview after sending
           hideReplyPreview();
         } else {
@@ -838,7 +838,6 @@
 
     // Handle Enter key and typing indicators
     const messageInput = document.getElementById('message-input');
-    let isTyping = false;
     let hasFocus = false;
 
     if (messageInput) {

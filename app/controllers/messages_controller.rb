@@ -10,7 +10,7 @@ class MessagesController < ApplicationController
     @message.user = current_user
 
     if @message.save
-      log_activity('message_send', @message, "Nachricht gesendet in Raum: #{@room.name}")
+      log_activity(action: 'message_send', target: @message, details: "Nachricht gesendet in Raum: #{@room.name}")
       # If JavaScript is disabled, still redirect normally
       redirect_to @room
     else
