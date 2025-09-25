@@ -20,6 +20,21 @@ class ApplicationController < ActionController::Base
     redirect_back(fallback_location: root_path)
   end
 
+  protected
+
+  # Helper method to log user activities
+  def log_activity(action:, target: nil, details: nil)
+    return unless user_signed_in?
+    
+    ActivityLog.log_activity(
+      user: current_user,
+      action: action,
+      target: target,
+      details: details,
+      request: request
+    )
+  end
+
   private
 
   def set_locale

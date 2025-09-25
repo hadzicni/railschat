@@ -87,6 +87,7 @@ class Admin::UsersController < Admin::BaseController
     if @user.can_be_banned_by?(current_user)
       reason = params[:reason] || "Verstoß gegen die Nutzungsrichtlinien"
       @user.ban!(reason)
+      log_activity(action: 'ban_user', target: @user, details: reason)
       redirect_to admin_users_path, notice: "Benutzer #{@user.display_name} wurde gesperrt."
     else
       redirect_to admin_users_path, alert: "Benutzer konnte nicht gesperrt werden."
@@ -96,6 +97,7 @@ class Admin::UsersController < Admin::BaseController
   def unban_user
     if @user.can_be_unbanned_by?(current_user)
       @user.unban!
+      log_activity(action: 'unban_user', target: @user)
       redirect_to admin_users_path, notice: "Benutzer #{@user.display_name} wurde entsperrt."
     else
       redirect_to admin_users_path, alert: "Benutzer konnte nicht entsperrt werden."

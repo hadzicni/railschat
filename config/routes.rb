@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: {
-    registrations: "users/registrations"
+    registrations: "users/registrations",
+    sessions: "users/sessions"
   }
   root "home#index"
 
@@ -22,6 +23,7 @@ Rails.application.routes.draw do
 
   # Admin routes
   namespace :admin do
+    resources :activity_logs, only: [:index, :show]
     resources :dashboard, only: [ :index ]
     resources :users do
       member do

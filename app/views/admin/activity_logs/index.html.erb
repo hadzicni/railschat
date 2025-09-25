@@ -1,0 +1,116 @@
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-1">
+        <i class="bi bi-activity me-2"></i>
+        Aktivitätsprotokoll
+      </h1>
+      <p class="text-muted">Übersicht aller Benutzeraktivitäten</p>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0">
+        <i class="bi bi-funnel me-2"></i>
+        Filter
+      </h5>
+    </div>
+    <div class="card-body">
+      <%= form_with url: admin_activity_logs_path, method: :get, local: true, class: "row g-3" do |form| %>
+        <div class="col-md-4">
+          <%= form.label :action_filter, "Aktion", class: "form-label" %>
+          <%= form.select :action_filter, 
+              options_for_select([["Alle Aktionen", ""]] + @actions.map { |action| [action.humanize, action] }, params[:action_filter]),
+              {}, { class: "form-select" } %>
+        </div>
+        
+        <div class="col-md-4">
+          <%= form.label :user_id, "Benutzer", class: "form-label" %>
+          <%= form.select :user_id,
+              options_for_select([["Alle Benutzer", ""]] + @users.map { |user| [user.display_name, user.id] }, params[:user_id]),
+              {}, { class: "form-select" } %>
+        </div>
+        
+        <div class="col-md-4 d-flex align-items-end">
+          <%= form.submit "Filtern", class: "btn btn-primary me-2" %>
+          <%= link_to "Zurücksetzen", admin_activity_logs_path, class: "btn btn-outline-secondary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Activity Log Table -->
+  <div class="card">
+    <div class="card-header">
+      <h5 class="mb-0">Aktivitäten</h5>
+    </div>
+    <div class="card-body">
+      <% if @activity_logs.any? %>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Zeitstempel</th>
+                <th>Benutzer</th>
+                <th>Aktion</th>
+                <th>Details</th>
+                <th>IP-Adresse</th>
+                <th>Aktionen</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @activity_logs.each do |log| %>
+                <tr>
+                  <td>
+                    <small class="text-muted">
+                      <%= format_datetime(log.created_at, :date_time) %>
+                    </small>
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="profile-avatar me-2" style="width: 30px; height: 30px; font-size: 0.8rem;">
+                        <%= log.user.initials %>
+                      </div>
+                      <div>
+                        <strong><%= log.user.display_name %></strong><br>
+                        <small class="text-muted"><%= log.user.email %></small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge bg-info">
+                      <%= log.action_description %>
+                    </span>
+                  </td>
+                  <td>
+                    <% if log.details.present? %>
+                      <small class="text-muted"><%= truncate(log.details, length: 50) %></small>
+                    <% else %>
+                      <small class="text-muted">-</small>
+                    <% end %>
+                  </td>
+                  <td>
+                    <code class="small"><%= log.ip_address %></code>
+                  </td>
+                  <td>
+                    <%= link_to admin_activity_log_path(log), class: "btn btn-sm btn-outline-primary", title: "Details" do %>
+                      <i class="bi bi-eye"></i>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+        
+      <% else %>
+        <div class="text-center py-4">
+          <i class="bi bi-activity display-4 text-muted"></i>
+          <p class="text-muted mt-2">Keine Aktivitäten gefunden</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -10,6 +10,7 @@ class UsersController < ApplicationController
 
   def update
     if @user.update(user_params)
+      log_activity(action: 'edit_profile', target: @user)
       redirect_to @user, notice: "Profil wurde erfolgreich aktualisiert."
     else
       render :edit

@@ -14,5 +14,13 @@ class Admin::DashboardController < Admin::BaseController
                        .order("COUNT(messages.id) DESC")
                        .limit(5)
     @role_distribution = Role.joins(:users).group("roles.name").count
+    
+    # Activity Log statistics
+    @total_activities = ActivityLog.count
+    @todays_activities = ActivityLog.where(created_at: Date.current.beginning_of_day..Date.current.end_of_day).count
+    @active_users_today = ActivityLog.where(created_at: Date.current.beginning_of_day..Date.current.end_of_day)
+                                    .select(:user_id)
+                                    .distinct
+                                    .count
   end
 end

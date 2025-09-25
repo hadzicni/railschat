@@ -30,6 +30,15 @@ class ChatChannel < ApplicationCable::Channel
 
     message = room.messages.create!(message_params)
 
+    # Log activity
+    ActivityLog.log_activity(
+      user: user,
+      action: 'message_send',
+      target: message,
+      details: "Nachricht gesendet in Raum: #{room.name}",
+      ip_address: nil
+    )
+
     ChatChannel.broadcast_to(room, {
       message: render_message(message),
       message_id: message.id,

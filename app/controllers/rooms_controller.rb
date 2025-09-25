@@ -10,6 +10,7 @@ class RoomsController < ApplicationController
   def show
     @messages = @room.messages.includes(:user).order(created_at: :asc)
     @message = Message.new
+    log_activity(action: 'join_room', target: @room)
   end
 
   def new
@@ -20,6 +21,7 @@ class RoomsController < ApplicationController
     @room = Room.new(room_params)
 
     if @room.save
+      log_activity(action: 'create_room', target: @room)
       redirect_to @room, notice: "Chatraum wurde erfolgreich erstellt."
     else
       @rooms = Room.all

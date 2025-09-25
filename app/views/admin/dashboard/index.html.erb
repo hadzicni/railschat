@@ -73,6 +73,46 @@
     </div>
   </div>
 
+  <!-- Activity Logs Statistics -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="card text-white bg-secondary">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h5 class="card-title">Aktivitätslogs (heute)</h5>
+              <h2 class="mb-0"><%= @todays_activities %></h2>
+            </div>
+            <div class="align-self-center">
+              <i class="bi bi-clock-history fs-1"></i>
+            </div>
+          </div>
+          <div class="mt-2">
+            <small>Gesamte Aktivitäten: <%= @total_activities %></small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card text-white bg-dark">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h5 class="card-title">Aktive Benutzer (heute)</h5>
+              <h2 class="mb-0"><%= @active_users_today %></h2>
+            </div>
+            <div class="align-self-center">
+              <i class="bi bi-person-check fs-1"></i>
+            </div>
+          </div>
+          <div class="mt-2">
+            <small>Aktivitäten pro Benutzer: <%= (@active_users_today > 0) ? (@todays_activities.to_f / @active_users_today).round(1) : 0 %></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Role Statistics -->
   <div class="row mb-4">
     <div class="col-md-6">
@@ -129,17 +169,22 @@
         </div>
         <div class="card-body">
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <%= link_to admin_users_path, class: "btn btn-outline-primary w-100 mb-2" do %>
                 <i class="bi bi-people me-2"></i>Benutzerverwaltung
               <% end %>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <%= link_to admin_roles_path, class: "btn btn-outline-warning w-100 mb-2" do %>
                 <i class="bi bi-shield-check me-2"></i>Rollenverwaltung
               <% end %>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
+              <%= link_to admin_activity_logs_path, class: "btn btn-outline-info w-100 mb-2" do %>
+                <i class="bi bi-clock-history me-2"></i>Aktivitätslogs
+              <% end %>
+            </div>
+            <div class="col-md-3">
               <%= link_to root_path, class: "btn btn-outline-success w-100 mb-2" do %>
                 <i class="bi bi-house me-2"></i>Zur Hauptanwendung
               <% end %>
@@ -151,6 +196,44 @@
   </div>
 
   <div class="row">
+    <!-- Recent Activity Logs -->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Neueste Aktivitäten</h5>
+          <%= link_to admin_activity_logs_path, class: "btn btn-sm btn-outline-primary" do %>
+            <i class="bi bi-arrow-right me-1"></i>Alle anzeigen
+          <% end %>
+        </div>
+        <div class="card-body">
+          <% recent_activities = ActivityLog.includes(:user, :target).recent.limit(10) %>
+          <% if recent_activities.any? %>
+            <% recent_activities.each do |activity| %>
+              <div class="d-flex align-items-start mb-3">
+                <div class="profile-avatar me-2" style="width: 30px; height: 30px; font-size: 0.8rem;">
+                  <%= activity.user.initials %>
+                </div>
+                <div class="flex-grow-1">
+                  <div class="d-flex justify-content-between">
+                    <strong><%= activity.user.display_name %></strong>
+                    <small class="text-muted"><%= format_datetime(activity.created_at) %></small>
+                  </div>
+                  <p class="mb-0 small text-muted">
+                    <%= activity.action_description %>
+                  </p>
+                  <% if activity.details.present? %>
+                    <small class="text-muted"><%= activity.details %></small>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-muted">Keine Aktivitäten vorhanden.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
     <!-- Recent Users -->
     <div class="col-md-6">
       <div class="card">
