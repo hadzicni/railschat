@@ -22,7 +22,7 @@ class RoomsController < ApplicationController
 
     if @room.save
       log_activity(action: 'create_room', target: @room)
-      redirect_to @room, notice: "Chatraum wurde erfolgreich erstellt."
+      redirect_to rooms_path, notice: "Chatraum wurde erfolgreich erstellt."
     else
       @rooms = Room.all
       render :index, status: :unprocessable_entity
