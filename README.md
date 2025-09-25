@@ -67,6 +67,9 @@ sudo apt-get install -y build-essential libssl-dev zlib1g-dev libyaml-dev
 # Install rbenv
 curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
 
+# Reload shell
+source ~/.bashrc
+
 # Install Ruby 3.4.5
 rbenv install 3.4.5
 rbenv global 3.4.5
