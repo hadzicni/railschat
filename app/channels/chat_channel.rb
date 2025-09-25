@@ -35,7 +35,7 @@ class ChatChannel < ApplicationCable::Channel
       message_id: message.id,
       user_id: user.id,
       user_email: user.email,
-      created_at: message.created_at.strftime("%H:%M")
+      created_at: message.created_at.in_time_zone("Berlin").strftime("%H:%M")
     })
   end
 

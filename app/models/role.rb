@@ -6,6 +6,7 @@ class Role < ApplicationRecord
   validates :permissions, presence: true
 
   # Store permissions as JSON in Rails 8
+  serialize :permissions, type: Array, coder: JSON
   before_save :ensure_permissions_is_array
 
   # Predefined system roles

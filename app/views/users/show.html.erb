@@ -37,7 +37,7 @@
             <div class="col-md-4">
               <div class="d-flex align-items-center justify-content-center">
                 <i class="bi bi-calendar3 text-primary me-2"></i>
-                <span>Dabei seit <%= @user.created_at.strftime("%B %Y") %></span>
+                <span>Dabei seit <%= format_datetime(@user.created_at, :month_year) %></span>
               </div>
             </div>
           </div>
@@ -120,7 +120,7 @@
                   <div class="fw-bold text-truncate">
                     <%= link_to message.room.name, room_path(message.room), class: "text-decoration-none" %>
                   </div>
-                  <small class="text-muted"><%= time_ago_in_words(message.created_at) %> ago</small>
+                  <small class="text-muted">vor <%= time_ago_german(message.created_at) %></small>
                 </div>
               </div>
             <% end %>

@@ -103,7 +103,7 @@
                     <% if user.banned? %>
                       <span class="badge bg-danger">Gesperrt</span>
                       <% if user.banned_at %>
-                        <br><small class="text-muted">seit <%= user.banned_at.strftime('%d.%m.%Y') %></small>
+                        <br><small class="text-muted">seit <%= format_datetime(user.banned_at, :date_only) %></small>
                       <% end %>
                     <% elsif user.admin? %>
                       <span class="badge bg-success">Administrator</span>
@@ -116,7 +116,7 @@
                   </td>
                   <td>
                     <small class="text-muted">
-                      <%= user.created_at.strftime('%d.%m.%Y') %>
+                      <%= format_datetime(user.created_at, :date_only) %>
                     </small>
                   </td>
                   <td>

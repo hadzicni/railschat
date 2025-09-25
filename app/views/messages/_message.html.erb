@@ -79,7 +79,7 @@
 
         <small class="timestamp <%= is_own_message ? 'text-light' : 'text-muted' %>">
           <i class="bi bi-clock me-1"></i>
-          <%= message.created_at.strftime('%H:%M') %>
+          <%= format_datetime(message.created_at, :short_time) %>
         </small>
       </div>
     </div>

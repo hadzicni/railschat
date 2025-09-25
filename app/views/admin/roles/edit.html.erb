@@ -23,7 +23,7 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="mb-3">
-                  <%= f.label :name, t('admin.roles.name), class: 'form-label' %>
+                  <%= f.label :name, t('admin.roles.name'), class: 'form-label' %>
                   <% if Role::SYSTEM_ROLES.key?(@role.name) %>
                     <%= f.text_field :name, class: 'form-control', disabled: true %>
                     <%= f.hidden_field :name %>

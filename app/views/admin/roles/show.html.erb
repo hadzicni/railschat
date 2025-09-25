@@ -55,8 +55,9 @@
               <h5 class="mb-0"><%= t('admin.roles.permissions') %></h5>
             </div>
             <div class="card-body">
-              <% if @role.permissions&.any? %>
-                <% @role.permissions.each do |permission| %>
+              <% permissions_array = @role.permissions.is_a?(Array) ? @role.permissions : (@role.permissions.present? ? JSON.parse(@role.permissions) : []) %>
+              <% if permissions_array.any? %>
+                <% permissions_array.each do |permission| %>
                   <span class="badge bg-secondary me-1 mb-1">
                     <%= t("admin.permissions.#{permission}") %>
                   </span>

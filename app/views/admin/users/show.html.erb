@@ -24,7 +24,7 @@
           <% if @user.banned? %>
             <span class="badge bg-danger fs-6"><%= t('status.banned') %></span>
             <% if @user.banned_at %>
-              <br><small class="text-muted"><%= t('status.since', date: @user.banned_at.strftime('%d.%m.%Y um %H:%M')) %></small>
+              <br><small class="text-muted"><%= t('status.since', date: format_datetime(@user.banned_at, :date_time)) %></small>
             <% end %>
           <% elsif @user.admin? %>
             <span class="badge bg-success fs-6"><%= t('status.admin') %></span>
@@ -45,11 +45,11 @@
         <div class="card-body">
           <div class="row mb-2">
             <div class="col-sm-5"><strong><%= t('account.registered') %>:</strong></div>
-            <div class="col-sm-7"><%= @user.created_at.strftime('%d.%m.%Y um %H:%M') %></div>
+            <div class="col-sm-7"><%= format_datetime(@user.created_at, :date_time) %></div>
           </div>
           <div class="row mb-2">
             <div class="col-sm-5"><strong><%= t('account.updated') %>:</strong></div>
-            <div class="col-sm-7"><%= @user.updated_at.strftime('%d.%m.%Y um %H:%M') %></div>
+            <div class="col-sm-7"><%= format_datetime(@user.updated_at, :date_time) %></div>
           </div>
           <% if @user.banned? %>
             <div class="row mb-2">
@@ -57,7 +57,7 @@
               <div class="col-sm-7">
                 <span class="badge bg-danger"><%= t('status.banned') %></span>
                 <% if @user.banned_at %>
-                  <br><small><%= t('status.since', date: @user.banned_at.strftime('%d.%m.%Y um %H:%M')) %></small>
+                  <br><small><%= t('status.since', date: format_datetime(@user.banned_at, :date_time)) %></small>
                 <% end %>
                 <% if @user.banned_reason.present? %>
                   <br><small><strong><%= t('account.reason') %>:</strong> <%= @user.banned_reason %></small>
@@ -167,7 +167,7 @@
         <div class="col-md-4">
           <div class="card bg-success text-white">
             <div class="card-body text-center">
-              <h3><%= time_ago_in_words(@user.created_at) %></h3>
+              <h3>vor <%= time_ago_german(@user.created_at) %></h3>
               <p class="mb-0"><%= t('admin.member_since') %></p>
             </div>
           </div>
@@ -188,7 +188,7 @@
                     <div class="d-flex align-items-center mb-2">
                       <strong class="me-2">in <%= link_to message.room.name, room_path(message.room), class: "text-decoration-none" %></strong>
                       <small class="text-muted">
-                        <%= message.created_at.strftime('%d.%m.%Y um %H:%M') %>
+                        <%= format_datetime(message.created_at, :date_time) %>
                       </small>
                     </div>
                     <p class="mb-0"><%= simple_format(message.content) %></p>
