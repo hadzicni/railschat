@@ -6,7 +6,7 @@ class Users::SessionsController < Devise::SessionsController
       if resource.persisted?
         ActivityLog.log_activity(
           user: resource,
-          action: 'login',
+          action: "login",
           target: resource,
           details: "Benutzer angemeldet",
           ip_address: request.remote_ip
@@ -18,7 +18,7 @@ class Users::SessionsController < Devise::SessionsController
   def destroy
     ActivityLog.log_activity(
       user: current_user,
-      action: 'logout',
+      action: "logout",
       target: current_user,
       details: "Benutzer abgemeldet",
       ip_address: request.remote_ip

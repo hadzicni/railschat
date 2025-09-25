@@ -3,9 +3,12 @@ module ApplicationCable
     identified_by :current_user
 
     def connect
-      # For now, just get any authenticated user from the session
-      # This is a simplified approach for testing
+      # Get authenticated user from the session with proper error handling
       self.current_user = find_verified_user
+      logger.info "ActionCable: Connection established for user #{current_user.email}"
+    rescue => e
+      logger.error "ActionCable: Connection failed - #{e.class}: #{e.message}"
+      reject_unauthorized_connection
     end
 
     private
@@ -16,7 +19,7 @@ module ApplicationCable
       # Method 1: Try Devise session (most reliable)
       if user_id = request.session.dig("warden.user.user.key", 0, 0)
         user = User.find_by(id: user_id)
-        if user
+        if user && !user.banned?
           logger.info "ActionCable: User #{user.email} connected via session"
           return user
         end
@@ -30,13 +33,29 @@ module ApplicationCable
           if decoded_session && decoded_session.dig("warden.user.user.key", 0, 0)
             user_id = decoded_session.dig("warden.user.user.key", 0, 0)
             user = User.find_by(id: user_id)
-            if user
+            if user && !user.banned?
               logger.info "ActionCable: User #{user.email} connected via cookie"
               return user
             end
           end
         rescue => e
           logger.warn "ActionCable: Cookie verification failed: #{e.message}"
+        end
+      end
+
+      # Method 2.5: Try session store directly (for fresh logins)
+      if request.session["warden.user.user.session"].present?
+        begin
+          user_id = request.session["warden.user.user.session"]["id"]
+          if user_id
+            user = User.find_by(id: user_id)
+            if user && !user.banned?
+              logger.info "ActionCable: User #{user.email} connected via session store"
+              return user
+            end
+          end
+        rescue => e
+          logger.warn "ActionCable: Session store verification failed: #{e.message}"
         end
       end
 

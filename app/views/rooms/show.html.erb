@@ -485,85 +485,97 @@
     let messageCooldown = 1000; // 1 second cooldown between messages
 
     // Initialize WebSocket connection with retry logic
-    function initializeWebSocket() {
-      try {
+    function initializeWebSocket(delay = 0) {
+      setTimeout(() => {
+        try {
+          console.log("🔌 Attempting WebSocket connection (attempt " + (connectionAttempts + 1) + ")");
 
-        // Clear any existing consumer
-        if (consumer) {
-          consumer.disconnect();
-        }
+          // Clear any existing consumer
+          if (consumer) {
+            consumer.disconnect();
+          }
 
-        consumer = createConsumer();
+          consumer = createConsumer();
 
-        subscription = consumer.subscriptions.create(
-          { channel: "ChatChannel", room_id: roomId },
-          {
-            connected: function() {
-              isConnected = true;
-              connectionAttempts = 0; // Reset on successful connection
-              lastHeartbeat = Date.now();
-              updateConnectionStatus(true);
+          subscription = consumer.subscriptions.create(
+            { channel: "ChatChannel", room_id: roomId },
+            {
+              connected: function() {
+                isConnected = true;
+                connectionAttempts = 0; // Reset on successful connection
+                lastHeartbeat = Date.now();
+                updateConnectionStatus(true);
 
-              // Clear any retry timeout
-              if (retryTimeout) {
-                clearTimeout(retryTimeout);
-                retryTimeout = null;
-              }
+                // Clear any retry timeout
+                if (retryTimeout) {
+                  clearTimeout(retryTimeout);
+                  retryTimeout = null;
+                }
 
-              // Start heartbeat monitoring
-              startHeartbeat();
-            },
+                // Start heartbeat monitoring
+                startHeartbeat();
+              },
 
-            disconnected: function() {
-              isConnected = false;
-              stopHeartbeat();
-              updateConnectionStatus(false);
+              disconnected: function() {
+                isConnected = false;
+                stopHeartbeat();
+                updateConnectionStatus(false);
 
-              // Attempt to reconnect if we haven't exceeded max retries
-              if (connectionAttempts < maxRetries) {
-                scheduleReconnect();
-              }
-            },
+                // Attempt to reconnect if we haven't exceeded max retries
+                if (connectionAttempts < maxRetries) {
+                  scheduleReconnect();
+                }
+              },
 
-            rejected: function() {
-              console.error("❌ WebSocket connection rejected");
-              isConnected = false;
-              updateConnectionStatus(false);
+              rejected: function() {
+                console.error("❌ WebSocket connection rejected - likely authentication issue");
+                isConnected = false;
+                updateConnectionStatus(false);
 
-              // Try to reconnect
-              if (connectionAttempts < maxRetries) {
-                scheduleReconnect();
-              }
-            },
+                // For rejected connections (auth issues), wait longer before retry
+                if (connectionAttempts < maxRetries) {
+                  connectionAttempts++;
+                  const authDelay = 2000 + (connectionAttempts * 1000); // 2s, 3s, 4s delays
+                  console.log("🔐 Authentication issue detected, retrying in " + authDelay + "ms");
+                  
+                  retryTimeout = setTimeout(() => {
+                    connectionAttempts--; // Don't count auth retries against normal limit
+                    initializeWebSocket();
+                  }, authDelay);
+                }
+              },
 
-            received: function(data) {
-              lastHeartbeat = Date.now(); // Update heartbeat on any received data
+              received: function(data) {
+                lastHeartbeat = Date.now(); // Update heartbeat on any received data
 
-              if (data.type === 'typing_start') {
-                handleTypingStart(data);
-              } else if (data.type === 'typing_stop') {
-                handleTypingStop(data);
-              } else {
-                addMessageToChat(data);
+                if (data.type === 'typing_start') {
+                  handleTypingStart(data);
+                } else if (data.type === 'typing_stop') {
+                  handleTypingStop(data);
+                } else {
+                  addMessageToChat(data);
+                }
               }
             }
-          }
-        );
-      } catch (error) {
-        console.error("❌ WebSocket initialization failed:", error);
-        isConnected = false;
-        updateConnectionStatus(false);
+          );
+        } catch (error) {
+          console.error("❌ WebSocket initialization failed:", error);
+          isConnected = false;
+          updateConnectionStatus(false);
 
-        if (connectionAttempts < maxRetries) {
-          scheduleReconnect();
+          if (connectionAttempts < maxRetries) {
+            scheduleReconnect();
+          }
         }
-      }
+      }, delay);
     }
 
     function scheduleReconnect() {
       connectionAttempts++;
       const delay = Math.min(1000 * Math.pow(2, connectionAttempts - 1), 10000); // Exponential backoff, max 10s
 
+      console.log("⏳ Scheduling WebSocket reconnect in " + delay + "ms (attempt " + connectionAttempts + "/" + maxRetries + ")");
+      
       retryTimeout = setTimeout(() => {
         initializeWebSocket();
       }, delay);
