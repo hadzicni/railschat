@@ -413,32 +413,25 @@
 
       // Initialize theme manager and attach events
       function initializeTheme() {
-        console.log('🎨 Initializing Theme Manager');
         window.themeManager = new ThemeManager();
 
         // Attach event listener to theme toggle button
         const themeToggle = document.getElementById('theme-toggle');
-        console.log('🔍 Looking for theme toggle button...', themeToggle);
 
         if (themeToggle) {
-          console.log('✅ Theme toggle button found, attaching event listener');
           themeToggle.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            console.log('🔄 Theme toggle clicked');
             window.themeManager.toggleTheme();
           });
         } else {
-          console.error('❌ Theme toggle button not found');
           // Try again after a short delay
           setTimeout(() => {
             const retryToggle = document.getElementById('theme-toggle');
             if (retryToggle) {
-              console.log('✅ Theme toggle found on retry');
               retryToggle.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('🔄 Theme toggle clicked (retry)');
                 window.themeManager.toggleTheme();
               });
             }

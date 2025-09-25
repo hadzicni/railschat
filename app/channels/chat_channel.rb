@@ -26,7 +26,8 @@ class ChatChannel < ApplicationCable::Channel
 
     ChatChannel.broadcast_to(room, {
       type: "typing_stop",
-      user_id: user.id
+      user_id: user.id,
+      user_name: user.display_name
     })
   end
 
@@ -81,7 +82,8 @@ class ChatChannel < ApplicationCable::Channel
 
     ChatChannel.broadcast_to(room, {
       type: "typing_stop",
-      user_id: user.id
+      user_id: user.id,
+      user_name: user.display_name
     })
   end
 
