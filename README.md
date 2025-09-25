@@ -35,22 +35,98 @@ RailsChat is a web-based chat application that enables multiple users to communi
 ## Installation & Setup
 
 ### Prerequisites
-- Ruby 3.4+
-- Rails 8.0+
-- Node.js and npm
 
-### Steps
+The following software packages must be installed:
+
+- **Ruby 3.4.5**
+- **Ruby on Rails 8.0**
+- **Git**
+- **SQLite3**
+- **Code editor** (VSCode, NeoVim, Cursor, etc.)
+
+### Windows Setup
+
+If you are using Windows, make sure you have installed all Windows Updates first.
+
+This fixes common issues:
+- Limited 800x600 resolution
+- WSL not found errors
+
+### Installing Ruby with rbenv
+
+We will use rbenv, a Ruby version manager, to install Ruby.
+
+```bash
+# Install WSL Ubuntu (Windows only)
+wsl --install -d Ubuntu
+
+# Update package lists and install dependencies
+sudo apt update
+sudo apt-get install -y build-essential libssl-dev zlib1g-dev libyaml-dev
+
+# Install rbenv
+curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
+
+# Install Ruby 3.4.5
+rbenv install 3.4.5
+rbenv global 3.4.5
+rbenv rehash
+```
+
+Verify Ruby installation:
+
+```bash
+ruby -v
+# Should output: ruby 3.4.5 (...)
+```
+
+### Installing Rails and Dependencies
+
+```bash
+# Install Rails and Bundler
+gem install bundler rails
+
+# Verify installation
+rails -v
+# Should output: Rails 8.0.2.1
+
+# Install Git and SQLite3
+sudo apt-get install git sqlite3 libsqlite3-dev
+```
+
+### Code Editor Setup
+
+Install your preferred code editor. For VSCode:
+
+```bash
+# Open current directory in VSCode
+code .
+
+# Open file explorer (Windows)
+explorer.exe .
+```
+
+### Working Directory
+
+Create and use `~/code` as your working directory:
+
+```bash
+cd
+mkdir code
+cd code
+```
+
+### Project Setup
 
 1. **Clone Repository**
    ```bash
    git clone https://github.com/hadzicni/railschat.git
-   cd projektarbeit_chatapp
+   cd railschat
    ```
 
 2. **Install Dependencies**
    ```bash
    bundle install
-   npm install
    ```
 
 3. **Setup Database**
@@ -76,56 +152,6 @@ RailsChat is a web-based chat application that enables multiple users to communi
 4. **Chatting**: Write messages and communicate with other users in real-time
 5. **Profile**: View and edit your profile information
 
-## Project Structure
-
-```
-app/
-├── controllers/
-│   ├── home_controller.rb      # Homepage
-│   ├── rooms_controller.rb     # Chat room management
-│   ├── messages_controller.rb  # Message handling
-│   └── users_controller.rb     # User profile management
-├── models/
-│   ├── user.rb                 # User model (Devise)
-│   ├── room.rb                 # Chat room model
-│   └── message.rb              # Message model
-├── views/
-│   ├── layouts/
-│   │   └── application.html.erb # Main layout with modern styling
-│   ├── home/
-│   ├── rooms/
-│   │   ├── index.html.erb       # Room overview
-│   │   └── show.html.erb        # Chat interface
-│   ├── users/
-│   │   ├── show.html.erb        # Profile view
-│   │   └── edit.html.erb        # Profile editing
-│   ├── messages/
-│   │   └── _message.html.erb    # Message partial
-│   └── devise/                  # Authentication views
-└── channels/
-    ├── application_cable/
-    │   └── connection.rb        # WebSocket connection
-    └── chat_channel.rb          # Real-time chat channel
-```
-
-## User Roles
-
-- **User**: Can register, login, create/join chat rooms, send messages, and manage profile
-- **Administrator**: (Planned for future version)
-
-## Entity-Relationship Model
-
-```
-User ||--o{ Message : sends
-Room ||--o{ Message : contains
-User }o--o{ Room : participates_in (via messages)
-```
-
-### Entities:
-- **User**: id, email, password, first_name, last_name, bio, location, created_at, updated_at
-- **Room**: id, name, description, created_at, updated_at
-- **Message**: id, content, user_id, room_id, created_at, updated_at
-
 ## Key Features Implementation
 
 ### Real-time Communication
@@ -144,15 +170,94 @@ User }o--o{ Room : participates_in (via messages)
 - **Real-time Updates**: No page refresh required
 - **User Avatars**: Auto-generated initials with modern styling
 
-## Future Enhancements
+## 🐛 Troubleshooting
 
-- [ ] **Admin Panel** for user management
-- [ ] **Private Messages** between users
-- [ ] **File Upload** for images and documents
-- [ ] **Push Notifications** for new messages
-- [ ] **Message Search** functionality
-- [ ] **Emoji Support** and reactions
-- [ ] **Dark Mode** theme option
+### Common Issues
+
+#### Ruby Version Issues
+
+**Problem**: Ruby version not found with rbenv
+
+**Solution**: Disable system Ruby and restart terminal
+
+```bash
+# Check what rbenv points to
+which rbenv
+
+# If it points to /usr/bin/ruby-build:
+sudo mv /usr/bin/ruby-build /usr/bin/ruby-build.bkp
+
+# If it points to /usr/bin/ruby:
+sudo mv /usr/bin/ruby /usr/bin/ruby.bkp
+
+# Add rbenv to PATH
+echo 'PATH="$HOME/.rbenv/plugins/bin:$PATH"' >> ~/.profile
+echo 'eval "$(rbenv init -)"' >> ~/.profile
+source ~/.profile
+
+# Retry Ruby installation
+rbenv install 3.4.5
+rbenv global 3.4.5
+```
+
+#### Bundle Install Failures
+
+**Problem**: `bundle install` fails
+
+**Solution**: Install missing dependencies
+
+```bash
+sudo apt-get install build-essential
+sudo apt-get install libsqlite3-dev
+ruby -v  # Verify Ruby version
+```
+
+#### Database Errors
+
+**Problem**: Database connection issues
+
+**Solution**: Reset database
+
+```bash
+rails db:drop
+rails db:create
+rails db:migrate
+rails db:seed
+```
+
+#### Server Issues
+
+**Problem**: Server won't start
+
+**Solution**: Check port availability
+
+```bash
+# Check if port 3000 is in use
+lsof -i :3000
+
+# Kill process if needed
+kill -9 [PID]
+
+# Restart server
+rails server
+```
+
+#### Asset Loading Issues
+
+**Problem**: CSS/JavaScript not loading
+
+**Solution**: Clear asset cache
+
+```bash
+rails assets:clobber
+rails assets:precompile
+```
+
+### Getting Help
+
+- 📚 [Rails Guides](https://guides.rubyonrails.org/)
+- 📖 [Ruby Documentation](https://ruby-doc.org/)
+- 💬 [Rails Community](https://discuss.rubyonrails.org/)
 
 ## Development
 
@@ -161,15 +266,6 @@ September 19, 2025
 ICT Module 223 – Multi-user Application
 Class: 23-223-E
 
-## License
+## 📄 License
 
-This project was developed for educational purposes.
-
-## Screenshots
-
-The application features a modern, gradient-based design with:
-- Clean navigation with user dropdown
-- Real-time chat interface with scrollable message history
-- User profile pages with activity statistics
-- Responsive design for all screen sizes
-- Modern form styling and button design
+This project was developed for educational purposes as part of ICT Module 223.
