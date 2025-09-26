@@ -9,7 +9,7 @@
           </h4>
         </div>
         <div class="card-body">
-          <%= form_with model: @user, local: true do |form| %>
+          <%= form_with model: @user, local: true, html: { method: :patch } do |form| %>
             <% if @user.errors.any? %>
               <div class="alert alert-danger">
                 <h6><%= pluralize(@user.errors.count, "Fehler") %> verhinderte das Speichern:</h6>
@@ -21,6 +21,7 @@
               </div>
             <% end %>
 
+            <div class="row">
               <!-- Basic Information -->
               <div class="col-md-6 mb-3">
                 <%= form.label :first_name, class: "form-label" do %>
