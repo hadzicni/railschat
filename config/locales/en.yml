@@ -1,76 +1,44 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
-
   datetime:
     distance_in_words:
       about_x_hours:
-        one: "about 1 hour"
+        one: "about one hour"
         other: "about %{count} hours"
       about_x_months:
-        one: "about 1 month"
+        one: "about one month"
         other: "about %{count} months"
       about_x_years:
-        one: "about 1 year"
+        one: "about one year"
         other: "about %{count} years"
       almost_x_years:
-        one: "almost 1 year"
+        one: "almost one year"
         other: "almost %{count} years"
       half_a_minute: "half a minute"
       less_than_x_minutes:
         one: "less than a minute"
         other: "less than %{count} minutes"
       less_than_x_seconds:
-        one: "less than 1 second"
+        one: "less than a second"
         other: "less than %{count} seconds"
       over_x_years:
-        one: "over 1 year"
-        other: "over %{count} years"
+        one: "more than a year"
+        other: "more than %{count} years"
       x_days:
-        one: "1 day"
+        one: "one day"
         other: "%{count} days"
       x_minutes:
-        one: "1 minute"
+        one: "one minute"
         other: "%{count} minutes"
       x_months:
-        one: "1 month"
+        one: "one month"
         other: "%{count} months"
       x_seconds:
-        one: "1 second"
+        one: "one second"
         other: "%{count} seconds"
       x_years:
-        one: "1 year"
+        one: "one year"
         other: "%{count} years"
 
-  # Navigation
   nav:
     home: "Home"
     rooms: "Rooms"
@@ -80,7 +48,6 @@ en:
     login: "Login"
     register: "Register"
 
-  # Chat
   chat:
     send_message: "Send"
     reply_to: "Reply to"
@@ -90,45 +57,44 @@ en:
     no_messages_room: "No messages in this chat room yet"
     start_conversation: "Be the first to start the conversation!"
 
-    # Admin
   admin:
     dashboard: "Dashboard"
-    welcome_admin: "Welcome to the administration area"
-    back_to_app: "Back to application"
+    welcome_admin: "Welcome to the Administration Panel"
+    back_to_app: "Back to App"
     users: "Users"
     user_details: "User Details"
     information_about: "Information about %{user}"
     edit: "Edit"
     back: "Back"
     statistics: "Statistics"
-    total_users: "Total Users"
-    banned_users: "Banned Users"
+    total_users: "Total users"
+    banned_users: "Banned users"
     admin_users: "Administrators"
     messages: "Messages"
-    active_rooms: "Active Rooms"
+    active_rooms: "Active rooms"
     member_since: "Member since"
-    latest_messages: "Latest Messages"
+    latest_messages: "Latest messages"
     no_messages_written: "No messages written yet"
     show_all_messages_from: "Show all messages from %{user}"
-    admin_actions: "Admin Actions"
+    admin_actions: "Administrator actions"
     change_admin_status: "Change admin status"
     grant_or_revoke_admin: "Grant or revoke administrator rights"
     ban_unban_user: "Ban/unban user"
     ban_or_unban_desc: "Prevent or allow login"
-    dangerous_actions: "Dangerous Actions"
+    dangerous_actions: "Dangerous actions"
     irreversible_actions: "These actions cannot be undone"
-    delete_user: "Delete User"
-    make_admin: "Make Administrator"
-    remove_admin: "Remove Admin Rights"
-    ban_user: "Ban User"
-    unban_user: "Unban"
-    ban_reason_placeholder: "Reason for ban..."
+    delete_user: "Delete user"
+    make_admin: "Make administrator"
+    remove_admin: "Remove admin rights"
+    ban_user: "Ban user"
+    unban_user: "Unban user"
+    ban_reason_placeholder: "Reason for banning..."
     confirm_admin: "Are you sure?"
-    confirm_ban: "Ban user?"
-    confirm_unban: "Unban user?"
+    confirm_ban: "Ban this user?"
+    confirm_unban: "Unban this user?"
     confirm_delete: "Really delete user? This cannot be undone!"
     banned_message: "Your account has been banned. Please contact the administrator."
-    create_user: "Create User"
+    create_user: "Create user"
 
     roles:
       title: "Role Management"
@@ -149,36 +115,36 @@ en:
       users_with_role: "Users with this Role"
       no_users_with_role: "No users have this role"
       no_permissions: "No permissions assigned"
-      system_role_name_readonly: "System role names cannot be changed"
-      created_successfully: "Role was created successfully"
-      updated_successfully: "Role was updated successfully"
-      deleted_successfully: "Role was deleted successfully"
+      system_role_name_readonly: "The name of system roles cannot be changed"
+      created_successfully: "Role was successfully created"
+      updated_successfully: "Role was successfully updated"
+      deleted_successfully: "Role was successfully deleted"
       cannot_delete_system_role: "System roles cannot be deleted"
       cannot_delete_with_users: "Roles with assigned users cannot be deleted"
-      assigned_successfully: "Role was assigned successfully"
-      removed_successfully: "Role was removed successfully"
+      assigned_successfully: "Role was successfully assigned"
+      removed_successfully: "Role was successfully removed"
       assignment_failed: "Role assignment failed"
       removal_failed: "Role removal failed"
       delete_confirmation: "Are you sure you want to delete the role '%{role}'?"
-      total_roles: "Total Roles"
+      total_roles: "Total roles"
 
     permissions:
-      manage_users: "Manage Users"
-      manage_roles: "Manage Roles"
-      manage_rooms: "Manage Rooms"
-      ban_users: "Ban Users"
-      unban_users: "Unban Users"
-      delete_messages: "Delete Messages"
-      moderate_chat: "Moderate Chat"
-      view_admin_panel: "View Admin Panel"
-      create_announcements: "Create Announcements"
-      manage_settings: "Manage Settings"
-      view_reports: "View Reports"
-      export_data: "Export Data"
-      create_rooms: "Create Rooms"
-      pin_messages: "Pin Messages"
-      send_messages: "Send Messages"
-      join_rooms: "Join Rooms"
+      manage_users: "Manage users"
+      manage_roles: "Manage roles"
+      manage_rooms: "Manage rooms"
+      ban_users: "Ban users"
+      unban_users: "Unban users"
+      delete_messages: "Delete messages"
+      moderate_chat: "Moderate chat"
+      view_admin_panel: "View admin panel"
+      create_announcements: "Create announcements"
+      manage_settings: "Manage settings"
+      view_reports: "View reports"
+      export_data: "Export data"
+      create_rooms: "Create rooms"
+      pin_messages: "Pin messages"
+      send_messages: "Send messages"
+      join_rooms: "Join rooms"
 
     common:
       view: "View"
@@ -187,22 +153,21 @@ en:
       back: "Back"
       cancel: "Cancel"
       errors_found: "Errors were found:"
-    new_user_form: "Create New User"
+    new_user_form: "Create new user"
     prevented_saving: "prevented saving"
     first_name_placeholder: "Enter first name..."
     last_name_placeholder: "Enter last name..."
     first_name_required: "First name is required"
     last_name_required: "Last name is required"
-    email_required: "Email address is required"
-    generated_password: "Generated Password"
+    email_required: "Email is required"
+    generated_password: "Generated password"
     copy: "Copy"
     copied: "Copied!"
-    password_info: "This password was automatically generated. The user should change it on first login."
-    bio_placeholder: "Brief description about the user..."
+    password_info: "This password was generated automatically. The user should change it on first login."
+    bio_placeholder: "Short description about the user..."
     location_placeholder: "City, Country"
     cancel: "Cancel"
 
-  # User Status
   status:
     banned: "Banned"
     admin: "Administrator"
@@ -210,7 +175,6 @@ en:
     you: "You"
     since: "since %{date}"
 
-  # Account Information
   account:
     registered: "Registered"
     updated: "Updated"
@@ -220,46 +184,44 @@ en:
     location: "Location"
     website: "Website"
 
-  # Forms
   forms:
     email: "Email"
     password: "Password"
     confirm_password: "Confirm Password"
     remember_me: "Remember me"
-    forgot_password: "Forgot your password?"
-    sign_in: "Sign In"
-    sign_up: "Sign Up"
-    cancel_account: "Cancel my account"
-    update_profile: "Update Profile"
+    forgot_password: "Forgot password?"
+    sign_in: "Sign in"
+    sign_up: "Sign up"
+    cancel_account: "Delete account"
+    update_profile: "Update profile"
     current_password: "Current password"
     leave_blank: "leave blank if you don't want to change it"
-    current_password_confirm: "we need your current password to confirm your changes"
-    error_singular: "error"
-    error_plural: "errors"
+    current_password_confirm: "we need your current password to confirm changes"
+    error_singular: "Error"
+    error_plural: "Errors"
 
-  # Rooms
   rooms:
     title: "Chat Rooms"
-    select_or_create: "Choose a chat room or create a new one"
-    available_rooms: "Available Chat Rooms"
-    room_singular: "room"
-    room_plural: "rooms"
-    participants: "participants"
-    message_singular: "message"
-    message_plural: "messages"
+    select_or_create: "Select a chat room or create a new one"
+    available_rooms: "Available chat rooms"
+    room_singular: "Room"
+    room_plural: "Rooms"
+    participants: "Participants"
+    message_singular: "Message"
+    message_plural: "Messages"
     last_active: "Last active"
     new: "New"
     enter: "Enter"
     no_rooms_yet: "No chat rooms available yet"
     create_first_room: "Create the first chat room!"
-    create_new_room: "Create New Chat Room"
-    create_new: "Create New Room"
-    name: "Room Name"
+    create_new_room: "Create new chat room"
+    create_new: "Create new room"
+    name: "Room name"
     name_placeholder: "e.g. General, Gaming, Tech..."
     description: "Description (optional)"
     description_placeholder: "Describe what this chat room is about..."
-    create: "Create Room"
-    create_room: "Create Chat Room"
+    create: "Create room"
+    create_room: "Create chat room"
     join: "Join"
     members: "Members"
     no_rooms: "No rooms available yet"
@@ -267,21 +229,75 @@ en:
     statistics: "Statistics"
     rooms: "Rooms"
 
-  # Language
   language:
-    select: "Select Language"
-    german: "Deutsch"
+    select: "Select language"
+    german: "German"
     english: "English"
 
-  # Home page
   home:
     welcome_title: "Welcome to RailsChat"
-    welcome_description: "A simple chat application for real-time communication in teams and groups."
+    welcome_description: "A simple chat application for real-time team and group communication."
     register_now: "Register now"
     already_registered: "Already registered? Sign in"
-    realtime_chat: "Real-time Chat"
+    realtime_chat: "Real-time chat"
     realtime_chat_desc: "Send and receive messages in real-time with other users."
-    multiple_rooms: "Multiple Chat Rooms"
-    multiple_rooms_desc: "Create or join different chat rooms for different topics."
+    multiple_rooms: "Multiple chat rooms"
+    multiple_rooms_desc: "Create or join different chat rooms for various topics."
     user_friendly: "User-friendly"
-    user_friendly_desc: "Simple and intuitive interface for a pleasant chat experience."
+    user_friendly_desc: "Simple and intuitive interface for an enjoyable chat experience."
+
+  activerecord:
+    attributes:
+      user:
+        email: "Email"
+        password: "Password"
+        password_confirmation: "Confirm Password"
+        first_name: "First name"
+        last_name: "Last name"
+        bio: "Description"
+        location: "Location"
+        website: "Website"
+      room:
+        name: "Name"
+        description: "Description"
+      message:
+        content: "Content"
+    models:
+      user: "User"
+      room: "Room"
+      message: "Message"
+
+  devise:
+    failure:
+      user:
+        banned: "Your account has been banned. Please contact the administrator."
+        invalid: "Invalid email or password."
+        unauthenticated: "You need to sign in or sign up before continuing."
+        timeout: "Your session has expired. Please sign in again."
+    sessions:
+      user:
+        signed_in: "Signed in successfully."
+        signed_out: "Signed out successfully."
+    registrations:
+      user:
+        signed_up: "Welcome! You have successfully signed up."
+        updated: "Your account has been updated successfully."
+        destroyed: "Goodbye! Your account has been deleted successfully."
+    passwords:
+      user:
+        send_instructions: "You will receive an email with instructions on how to reset your password in a few minutes."
+        updated: "Your password has been changed successfully. You are now signed in."
+
+  helpers:
+    submit:
+      create: "Create"
+      update: "Update"
+      submit: "Submit"
+      room:
+        create: "Create chat room"
+        update: "Update chat room"
+      message:
+        create: "Send"
+      user:
+        create: "Sign up"
+        update: "Update profile"
