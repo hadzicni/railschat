@@ -38,7 +38,6 @@ class ChatChannel < ApplicationCable::Channel
 
       # Check if user has permission to send messages
       unless user.can?("send_messages")
-        Rails.logger.warn "ChatChannel: User #{user.email} tried to send message without permission"
         reject
         return
       end
@@ -50,7 +49,6 @@ class ChatChannel < ApplicationCable::Channel
                           .first
 
       if recent_message
-        Rails.logger.warn "ChatChannel: Duplicate message blocked for user #{user.email}"
         return
       end
 
@@ -85,11 +83,7 @@ class ChatChannel < ApplicationCable::Channel
       created_at: message.created_at.in_time_zone("Berlin").strftime("%H:%M")
     })
 
-    Rails.logger.info "ChatChannel: Message sent successfully - User: #{user.email}, Room: #{room.name}"
-
     rescue => e
-      Rails.logger.error "ChatChannel: Error sending message - #{e.class}: #{e.message}"
-      Rails.logger.error e.backtrace.join("\n")
       reject
     end
   end

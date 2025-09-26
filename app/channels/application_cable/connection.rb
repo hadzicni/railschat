@@ -5,9 +5,7 @@ module ApplicationCable
     def connect
       # Get authenticated user from the session with proper error handling
       self.current_user = find_verified_user
-      logger.info "ActionCable: Connection established for user #{current_user.email}"
     rescue => e
-      logger.error "ActionCable: Connection failed - #{e.class}: #{e.message}"
       reject_unauthorized_connection
     end
 
@@ -20,7 +18,6 @@ module ApplicationCable
       if user_id = request.session.dig("warden.user.user.key", 0, 0)
         user = User.find_by(id: user_id)
         if user && !user.banned?
-          logger.info "ActionCable: User #{user.email} connected via session"
           return user
         end
       end
@@ -34,12 +31,10 @@ module ApplicationCable
             user_id = decoded_session.dig("warden.user.user.key", 0, 0)
             user = User.find_by(id: user_id)
             if user && !user.banned?
-              logger.info "ActionCable: User #{user.email} connected via cookie"
               return user
             end
           end
         rescue => e
-          logger.warn "ActionCable: Cookie verification failed: #{e.message}"
         end
       end
 
@@ -50,12 +45,10 @@ module ApplicationCable
           if user_id
             user = User.find_by(id: user_id)
             if user && !user.banned?
-              logger.info "ActionCable: User #{user.email} connected via session store"
               return user
             end
           end
         rescue => e
-          logger.warn "ActionCable: Session store verification failed: #{e.message}"
         end
       end
 
@@ -63,7 +56,6 @@ module ApplicationCable
       if Rails.env.development? && params[:user_id].present?
         user = User.find_by(id: params[:user_id])
         if user
-          logger.warn "ActionCable: User #{user.email} connected via param (dev only)"
           return user
         end
       end
@@ -72,13 +64,10 @@ module ApplicationCable
       if Rails.env.development?
         user = User.first
         if user
-          logger.warn "ActionCable: Using first user #{user.email} as fallback (dev only)"
           return user
         end
       end
 
-      # All methods failed
-      logger.error "ActionCable: No authenticated user found, rejecting connection"
       reject_unauthorized_connection
     end
   end

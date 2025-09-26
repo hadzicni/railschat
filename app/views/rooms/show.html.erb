@@ -460,11 +460,9 @@
     const initKey = `chatRoom_${roomId}_initialized`;
 
     if (window[initKey]) {
-      console.log("🔄 Chat room already initialized for room", roomId);
       return;
     }
 
-    console.log("🚀 Initializing chat room", roomId);
     window[initKey] = true;
 
     const currentUserId = <%= current_user.id %>;
@@ -488,7 +486,6 @@
     function initializeWebSocket(delay = 0) {
       setTimeout(() => {
         try {
-          console.log("🔌 Attempting WebSocket connection (attempt " + (connectionAttempts + 1) + ")");
 
           // Clear any existing consumer
           if (consumer) {
@@ -536,7 +533,6 @@
                 if (connectionAttempts < maxRetries) {
                   connectionAttempts++;
                   const authDelay = 2000 + (connectionAttempts * 1000); // 2s, 3s, 4s delays
-                  console.log("🔐 Authentication issue detected, retrying in " + authDelay + "ms");
 
                   retryTimeout = setTimeout(() => {
                     connectionAttempts--; // Don't count auth retries against normal limit
@@ -573,8 +569,6 @@
     function scheduleReconnect() {
       connectionAttempts++;
       const delay = Math.min(1000 * Math.pow(2, connectionAttempts - 1), 10000); // Exponential backoff, max 10s
-
-      console.log("⏳ Scheduling WebSocket reconnect in " + delay + "ms (attempt " + connectionAttempts + "/" + maxRetries + ")");
 
       retryTimeout = setTimeout(() => {
         initializeWebSocket();
@@ -924,7 +918,6 @@
 
         // Prevent multiple rapid submissions
         if (this.dataset.submitting === 'true') {
-          console.log("🚫 Form already submitting, ignoring duplicate submission");
           return;
         }
 
@@ -956,7 +949,6 @@
         // Check for message cooldown to prevent spam
         const now = Date.now();
         if (lastMessageSent && (now - lastMessageSent < messageCooldown)) {
-          console.log("🚫 Message blocked - too soon after last message");
           if (sendButton) {
             sendButton.disabled = false;
           }
@@ -1125,6 +1117,5 @@
       window.consumer = null;
     }
 
-    console.log("🧹 Chat room cleaned up for room", roomId);
   });
 </script>
