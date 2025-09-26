@@ -166,6 +166,7 @@ de:
     password_info: "Dieses Passwort wurde automatisch generiert. Der Benutzer sollte es beim ersten Login ändern."
     bio_placeholder: "Kurze Beschreibung über den Benutzer..."
     location_placeholder: "Stadt, Land"
+    email_placeholder: "benutzer@example.com"
     cancel: "Abbrechen"
 
   status:
@@ -174,6 +175,73 @@ de:
     user: "Benutzer"
     you: "Du"
     since: "seit %{date}"
+
+  activity_log:
+    actions:
+      login: "Hat sich angemeldet"
+      logout: "Hat sich abgemeldet" 
+      register: "Hat sich registriert"
+      profile_update: "Hat Profil aktualisiert"
+      create_room: "Hat Raum '%{room_name}' erstellt"
+      join_room: "Hat Raum '%{room_name}' betreten"
+      leave_room: "Hat Raum '%{room_name}' verlassen"
+      message_send: "Hat Nachricht gesendet in '%{room_name}'"
+      ban_user: "Hat Benutzer %{user_name} gesperrt"
+      unban_user: "Hat Benutzer %{user_name} entsperrt"
+      assign_role: "Hat Rolle zugewiesen"
+      remove_role: "Hat Rolle entfernt"
+      delete_message: "Hat Nachricht gelöscht"
+    title: "Aktivitätsprotokoll"
+    description: "Übersicht aller Benutzeraktivitäten"
+    filters: "Filter"
+    action_label: "Aktion"
+    user_label: "Benutzer"
+    all_actions: "Alle Aktionen"
+    all_users: "Alle Benutzer"
+    timestamp: "Zeitstempel"
+    action_column: "Aktion"
+    details: "Details"
+    no_activities: "Keine Aktivitäten gefunden"
+    todays_activities: "Aktivitätslogs (heute)"
+
+  messages:
+    no_permission: "Sie haben keine Berechtigung, Nachrichten zu senden."
+    sent_count: "Nachrichten gesendet"
+    no_messages_sent: "Noch keine Nachrichten gesendet"
+
+  users:
+    management: "Benutzerverwaltung"
+    management_description: "Verwalte alle registrierten Benutzer"
+    total_users: "Gesamt Benutzer"
+    created_successfully: "Benutzer erfolgreich erstellt. Temporäres Passwort: %{password}"
+    updated_successfully: "Benutzer erfolgreich aktualisiert."
+    deleted_successfully: "Benutzer erfolgreich gelöscht."
+    could_not_delete: "Benutzer konnte nicht gelöscht werden."
+    banned_successfully: "Benutzer %{user_name} wurde gesperrt."
+    could_not_ban: "Benutzer konnte nicht gesperrt werden."
+    unbanned_successfully: "Benutzer %{user_name} wurde entsperrt."
+    could_not_unban: "Benutzer konnte nicht entsperrt werden."
+    default_ban_reason: "Verstoß gegen die Nutzungsrichtlinien"
+    logged_in: "Benutzer angemeldet"
+    logged_out: "Benutzer abgemeldet"
+    new_user_registered: "Neuer Benutzer registriert: %{email}"
+
+  access:
+    admin_required: "Zugriff verweigert. Administrator-Rechte erforderlich."
+
+  months:
+    january: "Januar"
+    february: "Februar"
+    march: "März"
+    april: "April"
+    may: "Mai"
+    june: "Juni"
+    july: "Juli"
+    august: "August"
+    september: "September"
+    october: "Oktober"
+    november: "November"
+    december: "Dezember"
 
   account:
     registered: "Registriert"

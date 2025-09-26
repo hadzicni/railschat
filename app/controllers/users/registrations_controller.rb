@@ -42,7 +42,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         user: resource,
         action: "register",
         target: resource,
-        details: "Neuer Benutzer registriert: #{resource.email}",
+        details: I18n.t('users.new_user_registered', email: resource.email),
         request: request
       )
 

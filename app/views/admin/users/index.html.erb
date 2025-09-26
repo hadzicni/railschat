@@ -1,8 +1,8 @@
 <div class="container-fluid py-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-      <h1 class="h3 mb-1">Benutzerverwaltung</h1>
-      <p class="text-muted">Verwalte alle registrierten Benutzer</p>
+      <h1 class="h3 mb-1"><%= t('users.management') %></h1>
+      <p class="text-muted"><%= t('users.management_description') %></p>
     </div>
     <div>
       <%= link_to new_admin_user_path, class: "btn btn-success me-2" do %>
@@ -20,7 +20,7 @@
       <div class="card bg-light">
         <div class="card-body text-center">
           <h3 class="text-primary"><%= @total_users %></h3>
-          <p class="mb-0">Gesamt Benutzer</p>
+          <p class="mb-0"><%= t('users.total_users') %></p>
         </div>
       </div>
     </div>

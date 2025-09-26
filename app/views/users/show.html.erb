@@ -85,7 +85,7 @@
                 <i class="bi bi-chat-text-fill text-primary fs-2"></i>
               </div>
               <h4 class="mb-1"><%= @user.messages.count %></h4>
-              <small class="text-muted">Nachrichten gesendet</small>
+              <small class="text-muted"><%= t('messages.sent_count') %></small>
             </div>
             <div class="col-6 text-center">
               <div class="bg-success bg-opacity-10 rounded p-3 mb-2">
@@ -127,7 +127,7 @@
           <% else %>
             <div class="text-center text-muted py-4">
               <i class="bi bi-chat-square-dots fs-2 mb-3 d-block"></i>
-              <p>Noch keine Nachrichten gesendet</p>
+              <p><%= t('messages.no_messages_sent') %></p>
             </div>
           <% end %>
         </div>

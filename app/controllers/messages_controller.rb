@@ -27,7 +27,7 @@ class MessagesController < ApplicationController
 
   def check_send_permission
     unless current_user.can?("send_messages")
-      redirect_to root_path, alert: "Sie haben keine Berechtigung, Nachrichten zu senden."
+      redirect_to root_path, alert: t('messages.no_permission')
     end
   end
 end

@@ -37,19 +37,19 @@ class ActivityLog < ApplicationRecord
 
   def action_description
     case action
-    when "login" then "Hat sich angemeldet"
-    when "logout" then "Hat sich abgemeldet"
-    when "register" then "Hat sich registriert"
-    when "profile_update" then "Hat Profil aktualisiert"
-    when "create_room" then "Hat Raum '#{target&.name}' erstellt"
-    when "join_room" then "Hat Raum '#{target&.name}' betreten"
-    when "leave_room" then "Hat Raum '#{target&.name}' verlassen"
-    when "message_send" then "Hat Nachricht gesendet in '#{target&.room&.name}'"
-    when "ban_user" then "Hat Benutzer #{target&.display_name} gesperrt"
-    when "unban_user" then "Hat Benutzer #{target&.display_name} entsperrt"
-    when "assign_role" then "Hat Rolle zugewiesen"
-    when "remove_role" then "Hat Rolle entfernt"
-    when "delete_message" then "Hat Nachricht gelöscht"
+    when "login" then I18n.t('activity_log.actions.login')
+    when "logout" then I18n.t('activity_log.actions.logout')
+    when "register" then I18n.t('activity_log.actions.register')
+    when "profile_update" then I18n.t('activity_log.actions.profile_update')
+    when "create_room" then I18n.t('activity_log.actions.create_room', room_name: target&.name)
+    when "join_room" then I18n.t('activity_log.actions.join_room', room_name: target&.name)
+    when "leave_room" then I18n.t('activity_log.actions.leave_room', room_name: target&.name)
+    when "message_send" then I18n.t('activity_log.actions.message_send', room_name: target&.room&.name)
+    when "ban_user" then I18n.t('activity_log.actions.ban_user', user_name: target&.display_name)
+    when "unban_user" then I18n.t('activity_log.actions.unban_user', user_name: target&.display_name)
+    when "assign_role" then I18n.t('activity_log.actions.assign_role')
+    when "remove_role" then I18n.t('activity_log.actions.remove_role')
+    when "delete_message" then I18n.t('activity_log.actions.delete_message')
     else action.humanize
     end
   end

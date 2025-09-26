@@ -114,11 +114,11 @@ class User < ApplicationRecord
 
   def status
     if banned?
-      "Gesperrt"
+      I18n.t('status.banned')
     elsif has_role?("admin")
-      "Administrator"
+      I18n.t('status.admin')
     else
-      "Benutzer"
+      I18n.t('status.user')
     end
   end
 

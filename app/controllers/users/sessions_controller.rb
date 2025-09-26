@@ -8,7 +8,7 @@ class Users::SessionsController < Devise::SessionsController
           user: resource,
           action: "login",
           target: resource,
-          details: "Benutzer angemeldet",
+          details: I18n.t('users.logged_in'),
           request: request
         )
       end
@@ -20,7 +20,7 @@ class Users::SessionsController < Devise::SessionsController
       user: current_user,
       action: "logout",
       target: current_user,
-      details: "Benutzer abgemeldet",
+      details: I18n.t('users.logged_out'),
       request: request
     )
     super

@@ -58,7 +58,7 @@
 
             <div class="mb-3">
               <%= form.label :email, t('forms.email'), class: "form-label" %>
-              <%= form.email_field :email, class: "form-control", placeholder: "benutzer@example.com", required: true %>
+              <%= form.email_field :email, class: "form-control", placeholder: t('admin.email_placeholder'), required: true %>
               <div class="invalid-feedback">
                 <%= t('admin.email_required') %>
               </div>

@@ -29,7 +29,7 @@ class Admin::UsersController < Admin::BaseController
     @user.password_confirmation = @generated_password
 
     if @user.save
-      redirect_to admin_user_path(@user), notice: "Benutzer erfolgreich erstellt. Temporäres Passwort: #{@generated_password}"
+      redirect_to admin_user_path(@user), notice: t('users.created_successfully', password: @generated_password)
     else
       render :new, status: :unprocessable_entity
     end
@@ -40,7 +40,7 @@ class Admin::UsersController < Admin::BaseController
 
   def update
     if @user.update(user_params)
-      redirect_to admin_user_path(@user), notice: "Benutzer erfolgreich aktualisiert."
+      redirect_to admin_user_path(@user), notice: t('users.updated_successfully')
     else
       render :edit, status: :unprocessable_entity
     end
@@ -49,9 +49,9 @@ class Admin::UsersController < Admin::BaseController
   def destroy
     if @user.can_be_deleted_by?(current_user)
       @user.destroy
-      redirect_to admin_users_path, notice: "Benutzer erfolgreich gelöscht."
+      redirect_to admin_users_path, notice: t('users.deleted_successfully')
     else
-      redirect_to admin_users_path, alert: "Benutzer konnte nicht gelöscht werden."
+      redirect_to admin_users_path, alert: t('users.could_not_delete')
     end
   end
 
@@ -85,12 +85,12 @@ class Admin::UsersController < Admin::BaseController
 
   def ban_user
     if @user.can_be_banned_by?(current_user)
-      reason = params[:reason] || "Verstoß gegen die Nutzungsrichtlinien"
+      reason = params[:reason] || t('users.default_ban_reason')
       @user.ban!(reason)
       log_activity(action: 'ban_user', target: @user, details: reason)
-      redirect_to admin_users_path, notice: "Benutzer #{@user.display_name} wurde gesperrt."
+      redirect_to admin_users_path, notice: t('users.banned_successfully', user_name: @user.display_name)
     else
-      redirect_to admin_users_path, alert: "Benutzer konnte nicht gesperrt werden."
+      redirect_to admin_users_path, alert: t('users.could_not_ban')
     end
   end
 
@@ -98,9 +98,9 @@ class Admin::UsersController < Admin::BaseController
     if @user.can_be_unbanned_by?(current_user)
       @user.unban!
       log_activity(action: 'unban_user', target: @user)
-      redirect_to admin_users_path, notice: "Benutzer #{@user.display_name} wurde entsperrt."
+      redirect_to admin_users_path, notice: t('users.unbanned_successfully', user_name: @user.display_name)
     else
-      redirect_to admin_users_path, alert: "Benutzer konnte nicht entsperrt werden."
+      redirect_to admin_users_path, alert: t('users.could_not_unban')
     end
   end
 

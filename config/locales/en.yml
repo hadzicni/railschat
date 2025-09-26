@@ -166,6 +166,7 @@ en:
     password_info: "This password was generated automatically. The user should change it on first login."
     bio_placeholder: "Short description about the user..."
     location_placeholder: "City, Country"
+    email_placeholder: "user@example.com"
     cancel: "Cancel"
 
   status:
@@ -174,6 +175,73 @@ en:
     user: "User"
     you: "You"
     since: "since %{date}"
+
+  activity_log:
+    actions:
+      login: "Logged in"
+      logout: "Logged out"
+      register: "Registered"
+      profile_update: "Updated profile"
+      create_room: "Created room '%{room_name}'"
+      join_room: "Joined room '%{room_name}'"
+      leave_room: "Left room '%{room_name}'"
+      message_send: "Sent message in '%{room_name}'"
+      ban_user: "Banned user %{user_name}"
+      unban_user: "Unbanned user %{user_name}"
+      assign_role: "Assigned role"
+      remove_role: "Removed role"
+      delete_message: "Deleted message"
+    title: "Activity Log"
+    description: "Overview of all user activities"
+    filters: "Filters"
+    action_label: "Action"
+    user_label: "User"
+    all_actions: "All Actions"
+    all_users: "All Users"
+    timestamp: "Timestamp"
+    action_column: "Action"
+    details: "Details"
+    no_activities: "No activities found"
+    todays_activities: "Activity logs (today)"
+
+  messages:
+    no_permission: "You don't have permission to send messages."
+    sent_count: "Messages sent"
+    no_messages_sent: "No messages sent yet"
+
+  users:
+    management: "User Management"
+    management_description: "Manage all registered users"
+    total_users: "Total Users"
+    created_successfully: "User successfully created. Temporary password: %{password}"
+    updated_successfully: "User successfully updated."
+    deleted_successfully: "User successfully deleted."
+    could_not_delete: "User could not be deleted."
+    banned_successfully: "User %{user_name} was banned."
+    could_not_ban: "User could not be banned."
+    unbanned_successfully: "User %{user_name} was unbanned."
+    could_not_unban: "User could not be unbanned."
+    default_ban_reason: "Terms of service violation"
+    logged_in: "User logged in"
+    logged_out: "User logged out"
+    new_user_registered: "New user registered: %{email}"
+
+  access:
+    admin_required: "Access denied. Administrator rights required."
+
+  months:
+    january: "January"
+    february: "February"
+    march: "March"
+    april: "April"
+    may: "May"
+    june: "June"
+    july: "July"
+    august: "August"
+    september: "September"
+    october: "October"
+    november: "November"
+    december: "December"
 
   account:
     registered: "Registered"

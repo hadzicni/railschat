@@ -13,13 +13,13 @@ module ApplicationHelper
     when :date_only
       localized_time.strftime("%d.%m.%Y")
     when :month_year
-      # German month names
-      month_names = {
-        1 => "Januar", 2 => "Februar", 3 => "März", 4 => "April",
-        5 => "Mai", 6 => "Juni", 7 => "Juli", 8 => "August",
-        9 => "September", 10 => "Oktober", 11 => "November", 12 => "Dezember"
-      }
-      "#{month_names[localized_time.month]} #{localized_time.year}"
+      # Localized month names
+      month_keys = [
+        nil, :january, :february, :march, :april, :may, :june,
+        :july, :august, :september, :october, :november, :december
+      ]
+      month_name = I18n.t("months.#{month_keys[localized_time.month]}")
+      "#{month_name} #{localized_time.year}"
     else
       localized_time.strftime("%d.%m.%Y um %H:%M")
     end
