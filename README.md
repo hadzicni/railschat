@@ -91,7 +91,7 @@ gem install bundler rails
 
 # Verify installation
 rails -v
-# Should output: Rails 8.0.2.1
+# Should output: Rails 8.0.3
 
 # Install Git and SQLite3
 sudo apt-get install git sqlite3 libsqlite3-dev
